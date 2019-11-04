@@ -1,2 +1,2 @@
 # SpliceFamAlignMulti
-Performs multiple spliced alignment in a progressive way.
+Performs multiple spliced alignments in a progressive way.
