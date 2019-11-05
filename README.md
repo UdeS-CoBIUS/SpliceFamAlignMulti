@@ -5,8 +5,10 @@ Performs a multiple spliced alignment from the set of all pairs of source CDS an
 ----------------------------------------------------------------
 
 Authors: Aida Ouangraoua and Abigail Djossou
+
 Université de Sherbrooke, Canada
 CoBIUS Lab:  https://cobius.usherbrooke.ca/
+
 For questions email us at abigail.djossou@usherbrooke.ca
 
 ### Requirements:
