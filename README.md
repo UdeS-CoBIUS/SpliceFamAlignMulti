@@ -33,27 +33,27 @@ pairwise: main.py [-h] [-c CHOICESTRUCTURE] [-s STEP] [-ce COMPAREEXON]
                [-sef SOURCEEXONFILE] [-op OUTPUTPREFIX] [-of OUTPUTFORMAT]
 
 ```
-  -h, --help            show this help message and exit
-  -c CHOICESTRUCTURE, --choiceStructure CHOICESTRUCTURE
+*  -h, --help            show this help message and exit
+*  -c CHOICESTRUCTURE, --choiceStructure CHOICESTRUCTURE
                         Method used to infer splicing structure when a
                         splicing structure file is not given: blast or splign
-  -s STEP, --step STEP  The method goes until Step 1, 2, or 3: 1, 2 or 3
+*  -s STEP, --step STEP  The method goes until Step 1, 2, or 3: 1, 2 or 3
                         (required)
-  -ce COMPAREEXON, --compareExon COMPAREEXON
+*  -ce COMPAREEXON, --compareExon COMPAREEXON
                         The method includes in Step2 a comparison of exons:
                         Yes or No (required)
-  -sf SOURCEFILE, --sourceFile SOURCEFILE
+*  -sf SOURCEFILE, --sourceFile SOURCEFILE
                         Source (CDS) file name (required)
-  -tf TARGETFILE, --targetFile TARGETFILE
+*  -tf TARGETFILE, --targetFile TARGETFILE
                         Target (gene) file name (required)
-  -s2tf SOURCE2TARGETFILE, --source2TargetFile SOURCE2TARGETFILE
+*  -s2tf SOURCE2TARGETFILE, --source2TargetFile SOURCE2TARGETFILE
                         Association between source and target file name
                         (required)
-  -sef SOURCEEXONFILE, --sourceExonFile SOURCEEXONFILE
+*  -sef SOURCEEXONFILE, --sourceExonFile SOURCEEXONFILE
                         Source Exon (splicing structure) file name
-  -op OUTPUTPREFIX, --outputPrefix OUTPUTPREFIX
+*  -op OUTPUTPREFIX, --outputPrefix OUTPUTPREFIX
                         Output prefix (required)
-  -of OUTPUTFORMAT, --outputFormat OUTPUTFORMAT
+*  -of OUTPUTFORMAT, --outputFormat OUTPUTFORMAT
                         Output format : list or aln (required)   
 
 ```
@@ -63,28 +63,28 @@ multiple: main.py [-h] [-idty IDENTITYTHRESHOLD] [-treef TREEFILE]
                [-op OUTPUTPREFIX] [-ce COMPAREEXON] [-msa MSAMETHOD]
 
 ```
-  -h, --help            show this help message and exit
-  -idty IDENTITYTHRESHOLD, --identityThreshold IDENTITYTHRESHOLD
+*  -h, --help            show this help message and exit
+*  -idty IDENTITYTHRESHOLD, --identityThreshold IDENTITYTHRESHOLD
                         Identity threshold: real between 0.0 and 1.0 (default
                         = 0.3)
-  -treef TREEFILE, --treeFile TREEFILE
+*  -treef TREEFILE, --treeFile TREEFILE
                         tree file name
-  -sf SOURCEFILE, --sourceFile SOURCEFILE
+*  -sf SOURCEFILE, --sourceFile SOURCEFILE
                         Source file name (required)
-  -tf TARGETFILE, --targetFile TARGETFILE
+*  -tf TARGETFILE, --targetFile TARGETFILE
                         Target file name (required)
-  -s2tf SOURCE2TARGETFILE, --source2TargetFile SOURCE2TARGETFILE
+*  -s2tf SOURCE2TARGETFILE, --source2TargetFile SOURCE2TARGETFILE
                         Source to target file name (required)
-  -sef SOURCEEXONFILE, --sourceExonFile SOURCEEXONFILE
+*  -sef SOURCEEXONFILE, --sourceExonFile SOURCEEXONFILE
                         Source exon file name
-  -palnf PAIRWISEALNFILE, --pairwiseAlnFile PAIRWISEALNFILE
+*  -palnf PAIRWISEALNFILE, --pairwiseAlnFile PAIRWISEALNFILE
                         Pairwise alignment file name (required)
-  -op OUTPUTPREFIX, --outputPrefix OUTPUTPREFIX
+*  -op OUTPUTPREFIX, --outputPrefix OUTPUTPREFIX
                         Output prefix (required)
-  -ce COMPAREEXON, --compareExon COMPAREEXON
+*  -ce COMPAREEXON, --compareExon COMPAREEXON
                         The method includes a final step that compares exons
                         of blocks for further merges: Yes or No
-  -msa MSAMETHOD, --msaMethod MSAMETHOD
+*  -msa MSAMETHOD, --msaMethod MSAMETHOD
                         Multiple sequence aligner: muscle or mafft
 ### Running SpliceFamAlignMulti: examples of command line
 
