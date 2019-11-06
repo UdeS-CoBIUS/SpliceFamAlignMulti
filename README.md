@@ -28,7 +28,7 @@ For questions email us at abigail.djossou@usherbrooke.ca
 
 ### Usage
 ```
-pairwise: main.py [-h] [-c CHOICESTRUCTURE] [-s STEP] [-ce COMPAREEXON]
+pairwise: python2.7 main.py [-h] [-c CHOICESTRUCTURE] [-s STEP] [-ce COMPAREEXON]
                [-sf SOURCEFILE] [-tf TARGETFILE] [-s2tf SOURCE2TARGETFILE]
                [-sef SOURCEEXONFILE] [-op OUTPUTPREFIX] [-of OUTPUTFORMAT]
 
@@ -57,7 +57,7 @@ pairwise: main.py [-h] [-c CHOICESTRUCTURE] [-s STEP] [-ce COMPAREEXON]
                         Output format : list or aln (required)   
 
 ```
-multiple: main.py [-h] [-idty IDENTITYTHRESHOLD] [-treef TREEFILE]
+multiple: python3 main.py [-h] [-idty IDENTITYTHRESHOLD] [-treef TREEFILE]
                [-sf SOURCEFILE] [-tf TARGETFILE] [-s2tf SOURCE2TARGETFILE]
                [-sef SOURCEEXONFILE] [-palnf PAIRWISEALNFILE]
                [-op OUTPUTPREFIX] [-ce COMPAREEXON] [-msa MSAMETHOD]
@@ -88,11 +88,11 @@ multiple: main.py [-h] [-idty IDENTITYTHRESHOLD] [-treef TREEFILE]
                         Multiple sequence aligner: muscle or mafft
 ### Running SpliceFamAlignMulti: examples of command line
 
-#### First, compute all pairwise alignments:
+#### First, compute all pairwise alignments (Python2.7):
 ```
-python2 src/main.py -s 2 -ce Yes -sf examples/input/FAM86SG/FAM86SG_initialsource.fasta -tf examples/input/FAM86SG/FAM86SG_target.fasta -s2tf examples/input/FAM86SG/FAM86SG_initialsource2target.txt -sef examples/input/FAM86SG/FAM86SG_initialsourceexonlist.txt -op examples/output/FAM86SG_ -of list
+python2.7 src/main.py -s 2 -ce Yes -sf examples/input/FAM86SG/FAM86SG_initialsource.fasta -tf examples/input/FAM86SG/FAM86SG_target.fasta -s2tf examples/input/FAM86SG/FAM86SG_initialsource2target.txt -sef examples/input/FAM86SG/FAM86SG_initialsourceexonlist.txt -op examples/output/FAM86SG_ -of list
 ```
-#### Then, compute multiple spliced alignment:
+#### Then, compute multiple spliced alignment  (Python3):
 ```
 python3 src_multi/main.py -ce Yes -sf examples/input/FAM86SG/FAM86SG_initialsource.fasta -tf examples/input/FAM86SG/FAM86SG_target.fasta -s2tf examples/input/FAM86SG/FAM86SG_initialsource2target.txt -sef examples/input/FAM86SG/FAM86SG_initialsourceexonlist.txt -palnf examples/output/FAM86SG_result.txt -op examples/output/FAM86SG_ 
 ```
