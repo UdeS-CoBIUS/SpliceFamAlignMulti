@@ -66,7 +66,7 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
             for block in blocklist:
                 gstart,gend = block[2:]
                 k = 0
-                while k < len(mblocklist) and mblocklist[k][geneid][1] < gstart:
+                while k < len(mblocklist) and mblocklist[k][geneid][1] <= gstart:
                     k += 1
 
                 # if new block is after all current mblocks
@@ -113,7 +113,6 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
 
     #print(node)
     #print(mblocklist)
-    #print("check")
     check_order(extendedsourcedata,nbinitialsource,mblocklist)
     check(extendedsourcedata,nbinitialsource,mblocklist)
 
@@ -661,6 +660,7 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                     mblocklist[-1][idk] = sequenceRight[j][k][idk]
                     #print("AddRight",j,k)
 
+    #print(mblocklist)
     mblocklist = merge_overlapping(mblocklist)
     if(compareExon == 'Yes'):
         mblocklist = merge_compatible_unordered(mblocklist,allcdsseq)
@@ -702,7 +702,7 @@ def merge_overlapping(mblocklist):
                 overlap = False
                 for id in common_keys:
                     if(mblocklist[i][id][0] <  mblocklist[j][id][1] and mblocklist[j][id][0] <  mblocklist[i][id][1]):
-                        overlap = True
+                        overlap = True                        
                         break
                 if(overlap):
                     for id in list(mblocklist[i].keys()):
@@ -826,6 +826,7 @@ def check(extendedsourcedata,nbinitialsource,mblocklist):
                 assert(block[cdsid][0] == prec[1])
                 prec = block[cdsid]
         if(found):
+            #print(cdsid,prec,len(cdsseq))
             assert(prec[1] == len(cdsseq))
         j += 1
 
@@ -837,14 +838,19 @@ def check_order(extendedsourcedata,nbinitialsource,mblocklist):
             comparison = {}
             comparison["<"] = 0
             comparison[">"] = 0
+            comparison["="] = 0
             commonids = set(list(blocki.keys())) & set(list(blockj.keys()))
             for id in commonids:
                 if(blocki[id][1] <= blockj[id][0]):
                     comparison["<"] += 1
+                    #print(id, i,j,blocki[id],blockj[id])
                 elif(blockj[id][1] <= blocki[id][0]):
-                    comparison["<"] += 1
+                    comparison[">"] += 1
+                    #print(id, i,j,blocki[id],blockj[id])
+                else:
+                    comparison["="] += 1
+                    #print(id, i,j,blocki[id],blockj[id])
             assert(comparison["<"] == 0 or comparison[">"] == 0)
-            assert(comparison["<"] + comparison[">"] == len(commonids))
     
 
 def compute_sequence_identity(seq1, seq2):
