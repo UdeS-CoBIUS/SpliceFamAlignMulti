@@ -281,8 +281,11 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
             maxFusioni = fusion_matrix[i][maxFusionLeft[i]]
             for j in range(len(mblocklistRight)):
                 maxFusionj = fusion_matrix[maxFusionRight[j]][j]
-                if(maxFusioni >= MIN_FUSION and maxFusioni ==  maxFusionj and fusion_matrix[i][j] == maxFusioni and min(fusion_count[i][j]) > 0):
+                #if(maxFusioni >= MIN_FUSION and maxFusioni ==  maxFusionj and fusion_matrix[i][j] == maxFusioni and min(fusion_count[i][j]) > 0):
+                if(fusion_matrix[i][j] >= MIN_FUSION and (fusion_matrix[i][j] == maxFusioni or fusion_matrix[i][j] == maxFusionj) and min(fusion_count[i][j]) > 0):
                     fusionPairs.append([i,j,maxFusioni])
+                
+			
 
                 
     nbCompatiblePairs = []
