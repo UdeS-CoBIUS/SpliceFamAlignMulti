@@ -115,7 +115,7 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
     #print(mblocklist)
     check_order(extendedsourcedata,nbinitialsource,mblocklist)
     check(extendedsourcedata,nbinitialsource,mblocklist)
-
+    #print(mblocklist)
     return mblocklist, geneidList
 
 # merge two msa on two distinct set of sequences into a single msa
@@ -826,7 +826,7 @@ def check(extendedsourcedata,nbinitialsource,mblocklist):
             if(cdsid in list(block.keys())):
                 found = True
                 #print(cdsid,prec,block[cdsid])
-                assert(block[cdsid][0] == prec[1])
+                assert(block[cdsid][0] == prec[1])#*********#
                 prec = block[cdsid]
         if(found):
             #print(cdsid,prec,len(cdsseq))

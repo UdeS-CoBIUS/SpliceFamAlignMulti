@@ -239,12 +239,15 @@ def compute_tree(extendedsourcedata,targetdata,comparisonresults,comparisonresul
                 distance_matrix[i][j] = 0
     
     #print(distance_matrix)
-    if(len(targetdata) >= 3):
+    if(len(targetdata) > 3):
         distance_matrix = DistanceMatrix(distance_matrix, list_geneid)
         tree = nj(distance_matrix)
         tree = tree.root_at_midpoint()
         tree = str(tree)
         tree = tree.split("root")[0]+";"
+        #print(tree)
+    elif(len(targetdata) == 3):
+        tree = "(("+list_geneid[0]+","+list_geneid[1]+")"+","+list_geneid[2]+");"
     elif(len(targetdata) == 2):
         tree = "("+list_geneid[0]+","+list_geneid[1]+");"
     else:
