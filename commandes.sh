@@ -1,22 +1,5 @@
 #!/bin/bash
 
-Q9UHS2
-
-# Pairwise Q9UHS2
-python src/main.py -s 2 -ce Yes -sf examples/input/Q9UHS2/Q9UHS2_initialsource.fasta -tf examples/input/Q9UHS2/Q9UHS2_target.fasta -s2tf examples/input/Q9UHS2/Q9UHS2_initialsource2target.txt -sef examples/input/Q9UHS2/Q9UHS2_initialsourceexonlist.txt -op examples/output/Q9UHS2_ -of list
-
-# Multi Q9UHS2
-python3 src_multi/main.py -sf examples/input/Q9UHS2/Q9UHS2_initialsource.fasta -tf examples/input/Q9UHS2/Q9UHS2_target.fasta -s2tf examples/input/Q9UHS2/Q9UHS2_initialsource2target.txt -sef examples/input/Q9UHS2/Q9UHS2_initialsourceexonlist.txt -palnf examples/output/Q9UHS2_result.txt -op examples/output/Q9UHS2_ -ce Yes
-
-ASM3B_HUMAN
-
-# Pairwise ASM3B_HUMAN
-python src/main.py -s 2 -ce Yes -sf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsource.fasta -tf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_target.fasta -s2tf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsource2target.txt -sef examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsourceexonlist.txt -op examples/output/ASM3B_HUMAN_ -of list
-
-# Multi ASM3B_HUMAN
-python3 src_multi/main.py -sf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsource.fasta -tf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_target.fasta -s2tf examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsource2target.txt -sef examples/input/ASM3B_HUMAN/ASM3B_HUMAN_initialsourceexonlist.txt -palnf examples/output/ASM3B_HUMAN_result.txt -op examples/output/ASM3B_HUMAN_ -ce Yes
-
-
 # Pairwise FAM86SG
 python src/main.py -s 2 -ce Yes -sf examples/input/FAM86SG/FAM86SG_initialsource.fasta -tf examples/input/FAM86SG/FAM86SG_target.fasta -s2tf examples/input/FAM86SG/FAM86SG_initialsource2target.txt -sef examples/input/FAM86SG/FAM86SG_initialsourceexonlist.txt -op examples/output/FAM86SG_ -of list
 
