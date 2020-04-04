@@ -28,12 +28,14 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
     rank = {} #dict: sequence_id -> index of sequences in matrix comparisonresults (lines:genes; columns:cds)
     list_cds = {} #dict: gene_id -> list of its cdsid
     i = 0
+    # fill rank and and initialize list_cds
     for gene in targetdata:
         geneid,null = gene
         rank[geneid] = i
         list_cds[geneid] = []
         i += 1
-    allcdsseq = {}
+    allcdsseq = {} #dict: cds_id -> cds sequence
+    # fill list_cds and allcdsseq
     for j in range(nbinitialsource):
         cds = extendedsourcedata[j]
         cdsid,cdsseq,cdsgeneid,null = cds
@@ -44,7 +46,6 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
 
     #print(tree)
     t = newick.loads(tree)
-
 
     mblocklist = compute_msa_recursif(extendedsourcedata,nbinitialsource,t[0],rank,list_cds,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon)[0]
     
@@ -111,9 +112,9 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
         mblocklist = merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon)
         geneidList = geneidLeft + geneidRight
 
-    #print(node)
-    #print(mblocklist)
+    #check cds segments order
     check_order(extendedsourcedata,nbinitialsource,mblocklist)
+    #check mblocks order
     check(extendedsourcedata,nbinitialsource,mblocklist)
     #print(mblocklist)
     return mblocklist, geneidList
@@ -121,8 +122,8 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
 # merge two msa on two distinct set of sequences into a single msa
 def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon):
     mblocklist = []
-    cdsidLeft = []
-    cdsidRight = []
+    cdsidLeft = [] #left cdsid list
+    cdsidRight = [] #right cdsid list
     #compute left cdsid list
     for geneid in geneidLeft:
         for cdsid in list_cds[geneid]:
@@ -132,14 +133,14 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         for cdsid in list_cds[geneid]:
             cdsidRight.append(cdsid)
 
-    nbgeneRight = []
-    nbgeneLeft = []
-    nbcdsRight = []
-    nbcdsLeft = []
-    addsequenceLeft = []
-    addsequenceRight = []
-    sequenceLeft = []
-    sequenceRight = []
+    nbgeneRight = [] # list: right mblock position -> nb genes in mblock
+    nbgeneLeft = [] # list: left mblock position -> nb genes in mblock
+    nbcdsRight = []  # list: right mblock position -> nb cds in mblock
+    nbcdsLeft = [] # list: left mblock position -> nb cds in mblock
+    addsequenceLeft = [] # list: left mblock position -> list of supports for matching sequences
+    addsequenceRight = []# list: right mblock position -> list of supports for matching sequences
+    sequenceLeft = [] # list: left mblock position -> list of matching sequences in right genes
+    sequenceRight = [] # list: right mblock position -> list of matching sequences in left genes
     
     for i in range(len(mblocklistLeft)):
         nbgeneLeft.append(len(list(set(list(mblocklistLeft[i].keys()))&set(geneidLeft))))
@@ -158,22 +159,24 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         fusion_matrix.append([])
         fusion_count.append([])
         for j in range(len(mblocklistRight)):
-            #nbgenej = len(list(set(list(mblocklistRight[j].keys()))&set(geneidRight)))
-            #nbcdsj = len(list(set(list(mblocklistRight[j].keys()))&set(cdsidRight)))
             fusion_matrix[i].append(0)
             fusion_count[i].append([0,0])
 
+    # for each pair gene x cds (left x right)
     for geneid in geneidLeft:
         i = rank[geneid]
         for cdsid in cdsidRight:
             j = rank[cdsid]
+            # retrieve blocklist
             null,blocklist,null,null,null = comparisonresults[i][j]
             r = 0
+            # for each block in  blocklist
             for block in blocklist:
                 identity = comparisonresults_idty[i][j][r]
                 r += 1
                 gstart,gend = block[2:]
                 cstart,cend = block[:2]
+                # list of left mblock (gene) overlapping block with overlapping score
                 mblockOverlapGene = []
                 kGene = 0
                 while kGene < len(mblocklistLeft):
@@ -181,6 +184,7 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                         overlap = 100.0 * min(mblocklistLeft[kGene][geneid][1] - gstart, gend - mblocklistLeft[kGene][geneid][0])/(mblocklistLeft[kGene][geneid][1]-mblocklistLeft[kGene][geneid][0])
                         mblockOverlapGene.append([kGene,overlap])
                     kGene += 1
+                # list of right mblock (cds) overlapping block with overlapping score
                 mblockOverlapCds = []
                 kCds = 0
                 while kCds < len(mblocklistRight):
@@ -188,9 +192,12 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                         overlap = 100.0 * min(mblocklistRight[kCds][cdsid][1] - cstart, cend - mblocklistRight[kCds][cdsid][0])/(mblocklistRight[kCds][cdsid][1]-mblocklistRight[kCds][cdsid][0])
                         mblockOverlapCds.append([kCds,overlap])
                     kCds += 1
-                        
+
+                # if block overlap no gene but a cds
                 if(len(mblockOverlapGene) == 0):
+                    # for each cds
                     for x in mblockOverlapCds:
+                        # add matching sequence in left gene with its support
                         seq = {}
                         seq[geneid] = block[2:]
                         p = searchSequence(seq, sequenceRight[x[0]])
@@ -199,10 +206,14 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                             sequenceRight[x[0]].append(seq)
                             p = len(sequenceRight[x[0]])-1
                         addsequenceRight[x[0]][p] += 1
+                # if block overlap gene and cds
                 else:
+                    # for each gene x cds
                     for x in mblockOverlapGene:
                         for y in mblockOverlapCds:
+                            # increase pair matching support
                             fusion_matrix[x[0]][y[0]] += 1
+                            # increase left-right matching support
                             fusion_count[x[0]][y[0]][0] += 1
 
     for geneid in geneidRight:
@@ -249,13 +260,14 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                             fusion_matrix[y[0]][x[0]] += 1
                             fusion_count[y[0]][x[0]][1] += 1
 
-
+    # normalize fusion scores by the maximum number of matchings
     for i in range(len(mblocklistLeft)):
         for j in range(len(mblocklistRight)):
             if(fusion_matrix[i][j]>0):
                 nbpair = nbcdsLeft[i]*nbgeneRight[j]+nbgeneLeft[i]*nbcdsRight[j]
                 fusion_matrix[i][j]= 1.0 * fusion_matrix[i][j]/nbpair
 
+    # normalize addsequence scores by the maximum number of matchings
     for i in range(len(mblocklistLeft)):
         for j in range(len(addsequenceLeft[i])):
             addsequenceLeft[i][j] = 1.0 * addsequenceLeft[i][j]/nbcdsLeft[i]
@@ -264,14 +276,14 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         for j in range(len(addsequenceRight[i])):
             addsequenceRight[i][j] = 1.0 * addsequenceRight[i][j]/nbcdsRight[i]
 
-    maxAddLeft = []
+    maxAddLeft = [] # list: left mblock position -> pos of max score addsequence 
     for i in range(len(mblocklistLeft)):
         maxAddLeft.append(numpy.argmax(addsequenceLeft[i]))
-    maxAddRight = []
-    fusionPairs = []
-    
+    maxAddRight = [] # list: right mblock position -> pos of max score addsequence 
     for i in range(len(mblocklistRight)):
         maxAddRight.append(numpy.argmax(addsequenceRight[i]))
+
+    fusionPairs = [] # list of candidate fusion pairs with their scores 
 
     if(len(mblocklistLeft)>0 and len(mblocklistRight)>0):
         maxFusionLeft = numpy.argmax(fusion_matrix, axis=1)
@@ -302,21 +314,25 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         ik,jk,maxk = fusionPairs[k]
         for l in range(k+1,len(fusionPairs)):
             il,jl,maxl = fusionPairs[l]
-            if((il not in orderLeft[ik][after] or jl not in orderRight[jk][before]) and (il not in orderLeft[ik][before] or jl not in orderRight[jk][after])):
-                if (il in orderLeft[ik][after] or jl in orderRight[jk][after]) and all([ik not in orderLeft[x][after] for x in range(il,ik)]) and all([jk not in orderRight[x][after] for x in range(jl,jk)]):
+            if(ik == il and ((jl in orderRight[jk][after] and len(set(orderRight[jk][after])&set(orderRight[jl][before])) != 0) or (jl in orderRight[jk][before] and len(set(orderRight[jk][before])&set(orderRight[jl][after])) != 0))):
+                conflictPairs.append([k,l])
+            elif(jk == jl and ((il in orderLeft[ik][after] and len(set(orderLeft[ik][after])&set(orderLeft[il][before])) != 0) or (il in orderLeft[ik][before] and len(set(orderLeft[ik][before])&set(orderLeft[il][after])) != 0))):
+                conflictPairs.append([k,l])            
+            elif((il in orderLeft[ik][after] and jl in orderRight[jk][before]) or (il in orderLeft[ik][before] and jl in orderRight[jk][after])):
+                conflictPairs.append([k,l])
+            else:
+                if (il in orderLeft[ik][after] or jl in orderRight[jk][after]):# and all([(ik not in orderLeft[x][before] or il not in orderLeft[x][after]) for x in range(ik,il)]) and all([(jk not in orderRight[x][before] or jl not in orderRight[x][after]) for x in range(jk,jl)]):
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
                     nbBeforePair[l].append(fusionPairs[k][:2])
                             
-                elif(il in orderLeft[ik][before] or jl in orderRight[jk][before])  and all([il not in orderLeft[x][after] for x in range(ik,il)]) and all([jl not in orderRight[x][after] for x in range(jk,jl)]):
+                elif(il in orderLeft[ik][before] or jl in orderRight[jk][before]):#  and all([(il not in orderLeft[x][before] or ik not in orderLeft[x][after]) for x in range(il,ik)]) and all([(jl not in orderRight[x][before] or jk not in orderRight[x][after]) for x in range(jl,jk)]):
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
                     nbBeforePair[k].append(fusionPairs[l][:2])
                 else:
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
-            else:
-                conflictPairs.append([k,l])
     
     while(len(conflictPairs) > 0):
         #print("Conflict: ",[[fusionPairs[k][:2],fusionPairs[l][:2]] for k,l in conflictPairs ])
