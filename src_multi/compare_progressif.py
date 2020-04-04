@@ -101,7 +101,6 @@ def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,c
                     mblocklist[k-1][id] = mblocklist[k][id]
                 del(mblocklist[k])
 
-                    
     #if node is an internal
     else:
         # compute msa at left child
@@ -176,45 +175,56 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                 r += 1
                 gstart,gend = block[2:]
                 cstart,cend = block[:2]
-                # list of left mblock (gene) overlapping block with overlapping score
+
+                # list of left mblock (gene) overlapping block with overlapping segment
                 mblockOverlapGene = []
                 kGene = 0
                 while kGene < len(mblocklistLeft):
                     if(geneid in mblocklistLeft[kGene].keys() and (mblocklistLeft[kGene][geneid][1] > gstart and gend > mblocklistLeft[kGene][geneid][0])):
-                        overlap = 100.0 * min(mblocklistLeft[kGene][geneid][1] - gstart, gend - mblocklistLeft[kGene][geneid][0])/(mblocklistLeft[kGene][geneid][1]-mblocklistLeft[kGene][geneid][0])
-                        mblockOverlapGene.append([kGene,overlap])
+                        overlap_segment = [gstart, mblocklistLeft[kGene][geneid][1]]
+                        if((gend - mblocklistLeft[kGene][geneid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistLeft[kGene][geneid][0], gend]
+                        if((mblocklistLeft[kGene][geneid][1] - mblocklistLeft[kGene][geneid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistLeft[kGene][geneid][0], mblocklistLeft[kGene][geneid][1]]
+                        mblockOverlapGene.append([kGene,overlap_segment])
                     kGene += 1
-                # list of right mblock (cds) overlapping block with overlapping score
+                # list of right mblock (cds) overlapping block with overlapping segment
                 mblockOverlapCds = []
                 kCds = 0
                 while kCds < len(mblocklistRight):
                     if(cdsid in mblocklistRight[kCds].keys() and (mblocklistRight[kCds][cdsid][1] > cstart and cend > mblocklistRight[kCds][cdsid][0])):
-                        overlap = 100.0 * min(mblocklistRight[kCds][cdsid][1] - cstart, cend - mblocklistRight[kCds][cdsid][0])/(mblocklistRight[kCds][cdsid][1]-mblocklistRight[kCds][cdsid][0])
-                        mblockOverlapCds.append([kCds,overlap])
+                        overlap_segment = [cstart, mblocklistRight[kCds][cdsid][1]]
+                        if((cend - mblocklistRight[kCds][cdsid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistRight[kCds][cdsid][0], cend]
+                        if((mblocklistRight[kCds][cdsid][1] - mblocklistRight[kCds][cdsid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistRight[kCds][cdsid][0], mblocklistRight[kCds][cdsid][1]]
+                        mblockOverlapCds.append([kCds,overlap_segment])
                     kCds += 1
-
+                diff = abs((cend-cstart)-(gend-gstart))
                 # if block overlap no gene but a cds
                 if(len(mblockOverlapGene) == 0):
                     # for each cds
                     for x in mblockOverlapCds:
                         # add matching sequence in left gene with its support
-                        seq = {}
-                        seq[geneid] = block[2:]
-                        p = searchSequence(seq, sequenceRight[x[0]])
-                        if(p==-1):
-                            addsequenceRight[x[0]].append(0)
-                            sequenceRight[x[0]].append(seq)
-                            p = len(sequenceRight[x[0]])-1
-                        addsequenceRight[x[0]][p] += 1
+                        if(diff == 0):
+                            seq = {}
+                            seq[geneid] = [gstart+x[1][0]-cstart, gstart+x[1][1]-cstart]
+                            p = searchSequence(seq, sequenceRight[x[0]])
+                            if(p==-1):
+                                addsequenceRight[x[0]].append(0)
+                                sequenceRight[x[0]].append(seq)
+                                p = len(sequenceRight[x[0]])-1
+                            addsequenceRight[x[0]][p] += 1
                 # if block overlap gene and cds
                 else:
                     # for each gene x cds
                     for x in mblockOverlapGene:
                         for y in mblockOverlapCds:
-                            # increase pair matching support
-                            fusion_matrix[x[0]][y[0]] += 1
-                            # increase left-right matching support
-                            fusion_count[x[0]][y[0]][0] += 1
+                            if(abs((y[1][0]-cstart)-(x[1][0]-gstart)) <= diff or abs((y[1][1]-cend)-(x[1][1]-gend)) <= diff):
+                                # increase pair matching support
+                                fusion_matrix[x[0]][y[0]] += 1
+                                # increase left-right matching support
+                                fusion_count[x[0]][y[0]][0] += 1
 
     for geneid in geneidRight:
         i = rank[geneid]
@@ -231,34 +241,48 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                 kGene = 0
                 while kGene < len(mblocklistRight):
                     if(geneid in mblocklistRight[kGene].keys() and (mblocklistRight[kGene][geneid][1] > gstart and gend > mblocklistRight[kGene][geneid][0])):
-                        overlap = 100.0 * min(mblocklistRight[kGene][geneid][1] - gstart, gend - mblocklistRight[kGene][geneid][0])/(mblocklistRight[kGene][geneid][1]-mblocklistRight[kGene][geneid][0])
-                        mblockOverlapGene.append([kGene,overlap])
+                        overlap_segment = [gstart, mblocklistRight[kGene][geneid][1]]
+                        if((gend - mblocklistRight[kGene][geneid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistRight[kGene][geneid][0], gend]
+                        if((mblocklistRight[kGene][geneid][1] - mblocklistRight[kGene][geneid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistRight[kGene][geneid][0], mblocklistRight[kGene][geneid][1]]
+                        mblockOverlapGene.append([kGene,overlap_segment])
+
+                        
                     kGene += 1
                 mblockOverlapCds = []
                 kCds = 0
                 while kCds < len(mblocklistLeft):
                     if(cdsid in mblocklistLeft[kCds].keys() and (mblocklistLeft[kCds][cdsid][1] > cstart and cend > mblocklistLeft[kCds][cdsid][0])):
-                        overlap = 100.0 * min(mblocklistLeft[kCds][cdsid][1] - cstart, cend - mblocklistLeft[kCds][cdsid][0])/(mblocklistLeft[kCds][cdsid][1]-mblocklistLeft[kCds][cdsid][0])
-                        mblockOverlapCds.append([kCds,overlap])
+                        overlap_segment = [cstart, mblocklistLeft[kCds][cdsid][1]]
+                        if((cend - mblocklistLeft[kCds][cdsid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistLeft[kCds][cdsid][0], cend]
+                        if((mblocklistLeft[kCds][cdsid][1] - mblocklistLeft[kCds][cdsid][0])<(overlap_segment[1]-overlap_segment[0])):
+                            overlap_segment = [mblocklistLeft[kCds][cdsid][0], mblocklistLeft[kCds][cdsid][1]]
+                        mblockOverlapCds.append([kCds,overlap_segment])
+
                     kCds += 1
 
-
+                diff = abs((cend-cstart)-(gend-gstart))
                 if(len(mblockOverlapGene) == 0):
                     for y in mblockOverlapCds:
-                        seq = {}
-                        seq[geneid] = block[2:]
-                        p = searchSequence(seq, sequenceLeft[y[0]])
-                        if(p==-1):
-                            addsequenceLeft[y[0]].append(0)
-                            sequenceLeft[y[0]].append(seq)
-                            p = len(sequenceLeft[y[0]])-1
-                        addsequenceLeft[y[0]][p] += 1
+                        if(diff == 0):
+                            seq = {}
+                            seq[geneid] = [gstart+y[1][0]-cstart, gstart+y[1][1]-cstart]
+                            p = searchSequence(seq, sequenceLeft[y[0]])
+                            if(p==-1):
+                                addsequenceLeft[y[0]].append(0)
+                                sequenceLeft[y[0]].append(seq)
+                                p = len(sequenceLeft[y[0]])-1
+                            addsequenceLeft[y[0]][p] += 1
 
                 else:
                     for y in mblockOverlapCds:
                         for x in mblockOverlapGene:
-                            fusion_matrix[y[0]][x[0]] += 1
-                            fusion_count[y[0]][x[0]][1] += 1
+                            if(abs((y[1][0]-cstart)-(x[1][0]-gstart)) <= diff or abs((y[1][1]-cend)-(x[1][1]-gend)) <= diff):
+                                fusion_matrix[y[0]][x[0]] += 1
+                                fusion_count[y[0]][x[0]][1] += 1
+                                
 
     # normalize fusion scores by the maximum number of matchings
     for i in range(len(mblocklistLeft)):
@@ -293,12 +317,9 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
             maxFusioni = fusion_matrix[i][maxFusionLeft[i]]
             for j in range(len(mblocklistRight)):
                 maxFusionj = fusion_matrix[maxFusionRight[j]][j]
-                #if(maxFusioni >= MIN_FUSION and maxFusioni ==  maxFusionj and fusion_matrix[i][j] == maxFusioni and min(fusion_count[i][j]) > 0):
+
                 if(fusion_matrix[i][j] >= MIN_FUSION and (fusion_matrix[i][j] == maxFusioni or fusion_matrix[i][j] == maxFusionj) and min(fusion_count[i][j]) > 0):
                     fusionPairs.append([i,j,maxFusioni])
-                
-			
-
                 
     nbCompatiblePairs = []
     nbBeforePair = []
@@ -315,35 +336,33 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         ik,jk,maxk = fusionPairs[k]
         for l in range(k+1,len(fusionPairs)):
             il,jl,maxl = fusionPairs[l]
+            #if equality for left and order for right but conflicting interval
             if(ik == il and ((jl in orderRight[jk][after] and any([[ik,j] not in mblockpairs for j in set(orderRight[jk][after])&set(orderRight[jl][before])])) or (jl in orderRight[jk][before] and any([[ik,j] not in mblockpairs for j in set(orderRight[jk][before])&set(orderRight[jl][after])])))):
                 conflictPairs.append([k,l])
+            #if equality for right and order for left but conflicting interval
             elif(jk == jl and ((il in orderLeft[ik][after] and any([[i,jk] not in mblockpairs for i in set(orderLeft[ik][after])&set(orderLeft[il][before])])) or (il in orderLeft[ik][before] and any([[i,jk] not in mblockpairs for i in set(orderLeft[ik][before])&set(orderLeft[il][after])])))):
-                conflictPairs.append([k,l])            
+                conflictPairs.append([k,l])
+            # if crossing
             elif((il in orderLeft[ik][after] and jl in orderRight[jk][before]) or (il in orderLeft[ik][before] and jl in orderRight[jk][after])):
                 conflictPairs.append([k,l])
+            # else the pairs are compatible
             else:
-                if (il in orderLeft[ik][after] or jl in orderRight[jk][after]):# and all([(ik not in orderLeft[x][before] or il not in orderLeft[x][after]) for x in range(ik,il)]) and all([(jk not in orderRight[x][before] or jl not in orderRight[x][after]) for x in range(jk,jl)]):
+                if (il in orderLeft[ik][after] or jl in orderRight[jk][after]):
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
                     nbBeforePair[l].append(fusionPairs[k][:2])
                             
-                elif(il in orderLeft[ik][before] or jl in orderRight[jk][before]):#  and all([(il not in orderLeft[x][before] or ik not in orderLeft[x][after]) for x in range(il,ik)]) and all([(jl not in orderRight[x][before] or jk not in orderRight[x][after]) for x in range(jl,jk)]):
+                elif(il in orderLeft[ik][before] or jl in orderRight[jk][before]):
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
                     nbBeforePair[k].append(fusionPairs[l][:2])
                 else:
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
-    # for [k,l] in conflictPairs:
-    #     ik,jk,maxk = fusionPairs[k]
-    #     il,jl,maxl = fusionPairs[l]
-    #     print("Conflict:",ik,jk,il,jl,maxk,maxl)
-    #     print(mblocklistLeft[ik])
-    #     print(mblocklistRight[jk])
-    #     print(mblocklistLeft[il])
-    #     print(mblocklistRight[jl])
-    #     print("")
-                        
+
+    #for [k,l] in conflictPairs:
+        #print([k,l])
+    #Iteratively remove the max conflicting fusion pairs with minimum support
     while(len(conflictPairs) > 0):
         #print("Conflict: ",[[fusionPairs[k][:2],fusionPairs[l][:2]] for k,l in conflictPairs ])
         nbConflict = {}
@@ -359,7 +378,7 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                 maxConflict = nbConflict[k]
             if(nbConflict[l] > maxConflict):
                 maxConflict = nbConflict[l]
-        pairs = []
+        pairs = [] # list of maximum conflicting fusion pairs
         for [k,l] in conflictPairs:
             if(k not in pairs and nbConflict[k] == maxConflict):
                 pairs.append(k)
@@ -367,13 +386,14 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                 pairs.append(l)
 
         minsupp = fusionPairs[pairs[0]][2]
-        delk = pairs[0]
+        delk = pairs[0] # maximum conflicting fusion pair with min support
         for k in pairs:
             if(fusionPairs[k][2] <  minsupp):
                 minsupp = fusionPairs[k][2]
                 delk = k
         pair = fusionPairs[delk][:2]
-        #print("Delete:",pair )
+
+        #remove delk
         del(fusionPairs[delk])
         del(nbCompatiblePairs[delk])
         del(nbBeforePair[delk])
@@ -689,7 +709,7 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                     mblocklist[-1][idk] = sequenceRight[j][k][idk]
                     #print("AddRight",j,k)
 
-    #print(mblocklist)
+    mblocklist= order_mblocklist(mblocklist)
     mblocklist = merge_overlapping(mblocklist)
     if(compareExon == 'Yes'):
         mblocklist = merge_compatible_unordered(mblocklist,allcdsseq)
