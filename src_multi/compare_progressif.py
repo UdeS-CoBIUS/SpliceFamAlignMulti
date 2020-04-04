@@ -307,6 +307,7 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
     orderLeft = partial_order(mblocklistLeft)
     orderRight = partial_order(mblocklistRight)
     conflictPairs = []
+    mblockpairs = [x[:2] for x in fusionPairs]
     for k in range(len(fusionPairs)):
         nbCompatiblePairs.append(0)
         nbBeforePair.append([])
@@ -314,9 +315,9 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
         ik,jk,maxk = fusionPairs[k]
         for l in range(k+1,len(fusionPairs)):
             il,jl,maxl = fusionPairs[l]
-            if(ik == il and ((jl in orderRight[jk][after] and len(set(orderRight[jk][after])&set(orderRight[jl][before])) != 0) or (jl in orderRight[jk][before] and len(set(orderRight[jk][before])&set(orderRight[jl][after])) != 0))):
+            if(ik == il and ((jl in orderRight[jk][after] and any([[ik,j] not in mblockpairs for j in set(orderRight[jk][after])&set(orderRight[jl][before])])) or (jl in orderRight[jk][before] and any([[ik,j] not in mblockpairs for j in set(orderRight[jk][before])&set(orderRight[jl][after])])))):
                 conflictPairs.append([k,l])
-            elif(jk == jl and ((il in orderLeft[ik][after] and len(set(orderLeft[ik][after])&set(orderLeft[il][before])) != 0) or (il in orderLeft[ik][before] and len(set(orderLeft[ik][before])&set(orderLeft[il][after])) != 0))):
+            elif(jk == jl and ((il in orderLeft[ik][after] and any([[i,jk] not in mblockpairs for i in set(orderLeft[ik][after])&set(orderLeft[il][before])])) or (il in orderLeft[ik][before] and any([[i,jk] not in mblockpairs for i in set(orderLeft[ik][before])&set(orderLeft[il][after])])))):
                 conflictPairs.append([k,l])            
             elif((il in orderLeft[ik][after] and jl in orderRight[jk][before]) or (il in orderLeft[ik][before] and jl in orderRight[jk][after])):
                 conflictPairs.append([k,l])
@@ -333,7 +334,16 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
                 else:
                     nbCompatiblePairs[k] += 1
                     nbCompatiblePairs[l] += 1
-    
+    # for [k,l] in conflictPairs:
+    #     ik,jk,maxk = fusionPairs[k]
+    #     il,jl,maxl = fusionPairs[l]
+    #     print("Conflict:",ik,jk,il,jl,maxk,maxl)
+    #     print(mblocklistLeft[ik])
+    #     print(mblocklistRight[jk])
+    #     print(mblocklistLeft[il])
+    #     print(mblocklistRight[jl])
+    #     print("")
+                        
     while(len(conflictPairs) > 0):
         #print("Conflict: ",[[fusionPairs[k][:2],fusionPairs[l][:2]] for k,l in conflictPairs ])
         nbConflict = {}
