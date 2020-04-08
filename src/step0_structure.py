@@ -32,7 +32,7 @@ def launch_splign(cdsseqfilename, geneseqfilename, cdsid, geneid):
 
     splignoutputname = os.getcwd()+'/src/results/splign_results/CDS_' + cdsid+'VS_Gene_' + geneid+".splign"
 
-    os.system(os.getcwd()+"/src/splign -query "+ cdsseqfilename + " -subj "+geneseqfilename+" -disc -aln "+splignoutputname+ " -min_compartment_idty 0.00 -min_exon_idty 0.00")
+    os.system(os.getcwd()+"/src/splign -query "+ cdsseqfilename + " -subj "+geneseqfilename+" -disc -aln "+splignoutputname+ " -min_compartment_idty 0.00 -min_exon_idty 0.00 > null")
 
     return splignoutputname
 
@@ -66,6 +66,40 @@ def parse_splign_output(splignoutputname):
                 block = querylocation + subjectlocation
                 if identity >= 1:
                     blocklist.append(block)
+    file.close()
+    os.remove(splignoutputname)
+    return blocklist
+
+def parse_splign_output_default(splignoutputname):
+    """
+    This function launches splign
+
+    Parameters
+    ----------
+    splignoutputname:
+
+    Returns
+    -------
+    blocklist
+    """
+    file=open(splignoutputname, "r")
+    blocklist = []
+    for line in file.readlines(): 
+        if 'No alignment was found' in line or ">-1" in line:
+            break
+        else:
+            if("Exon" in line):
+                location = line.split("(")[1].split(")")[0]
+                identity= float(line.split(" ")[-1])
+               
+                querylocation,subjectlocation = location.split(",")
+                querylocation = [int(x) for x in querylocation.split("-")]
+                querylocation[0] -= 1
+                subjectlocation = [int(x) for x in subjectlocation.split("-")]
+                subjectlocation[0] -= 1
+                block = querylocation + subjectlocation
+
+                blocklist.append(block)
     file.close()
     os.remove(splignoutputname)
     return blocklist

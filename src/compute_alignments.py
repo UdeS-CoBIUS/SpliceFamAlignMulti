@@ -47,7 +47,7 @@ NC_ACCEPTOR2="AG"
 #########################
 
 
-def spliceAlignment(sourceData, targetData,  step, compareExon, choice, outputPrefix):
+def spliceAlignment(sourceData, targetData,  step, compareExon, choice, pairwiseMethod, outputPrefix):
 
     """
     This function launches a parallel pairwise alignment between all pairs of CDS and gene
@@ -179,7 +179,7 @@ def spliceAlignment(sourceData, targetData,  step, compareExon, choice, outputPr
 
     pool_results = []
     for x in gene_cds:
-        pool_results.append(poolCompare(x,cdsExon,  sourceData, cds2GeneExon,intronList,geneExon,step, compareExon))
+        pool_results.append(poolCompare(x,cdsExon,  sourceData, cds2GeneExon,intronList,geneExon,step, compareExon,pairwiseMethod))
     
     results = {}
     # recover results of all pairs
@@ -267,7 +267,7 @@ def extractIntronGene(geneId, cdsId, blockList):
 
 
 def poolCompare(gene_cds, cdsExon,  sourceData, cds2GeneExon,intronList,\
-                    geneExon,step, compareExon):
+                    geneExon,step, compareExon,pairwiseMethod):
     """
     This function launchs comparison according to the method choosed to do the alignment and returns analysed results
 
@@ -294,7 +294,7 @@ def poolCompare(gene_cds, cdsExon,  sourceData, cds2GeneExon,intronList,\
     q: list
         list of information about the alignment between cds and gene
     """
-
+    
     gene = gene_cds[0]
     cds = gene_cds[1]
     cdsId, cdsSeq, cdsGeneId, blockList_init = cds
@@ -303,21 +303,30 @@ def poolCompare(gene_cds, cdsExon,  sourceData, cds2GeneExon,intronList,\
     geneId, geneSeq = gene
     geneLen = len(geneSeq)
 
-    #Local alignment
-    blockList  = localAlignment(cdsId,cdsLen, cdsExon[cdsId],geneId, geneLen, geneSeq)
+    if(pairwiseMethod == "sfa"):
+        #Local alignment
+        blockList  = localAlignment(cdsId,cdsLen, cdsExon[cdsId],geneId, geneLen, geneSeq)
     
-    #Block extension
-    if  int(step) >= 2:
-        blockList = Extend(cdsId, geneId, blockList, cdsLen, cdsSeq, cdsExon, geneLen, geneSeq, geneExon, intronList, compareExon)
+        #Block extension
+        if  int(step) >= 2:
+            blockList = Extend(cdsId, geneId, blockList, cdsLen, cdsSeq, cdsExon, geneLen, geneSeq, geneExon, intronList, compareExon)
 
-    #Global alignment
-    if  int(step) >= 3:
-        blockList = AlignRestOfExons(cdsId, geneId, blockList, cdsExon, geneLen, cdsLen, geneExon, intronList,
-                                     cdsSeq, geneSeq)
+        #Global alignment
+        if  int(step) >= 3:
+            blockList = AlignRestOfExons(cdsId, geneId, blockList, cdsExon, geneLen, cdsLen, geneExon, intronList, cdsSeq, geneSeq)
             
+        
+    if(pairwiseMethod == "splign"):
+        cdsSeqFile = os.getcwd() + '/src/sequences/cds/CDS_' + cdsId + '.fasta'
+        geneSeqFile = os.getcwd() + '/src/sequences/genes/Gene_' + geneId  + '.fasta'
+        splignOutputName = launch_splign(cdsSeqFile, geneSeqFile, cdsId, geneId )
+        blockList = parse_splign_output_default(splignOutputName)
+
     if(cdsGeneId == geneId):
         blockList = blockList_init
     blockList = order(blockList)
+
+        
     # analyse blocks results
     status, splicingSites, cdsTarget, texisting = analyse_result(blockList , cdsId, cdsSeq, geneId, geneSeq, sourceData, cds2GeneExon, cdsExon)
     

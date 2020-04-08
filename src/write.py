@@ -85,7 +85,11 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
         j += 1
 
     p = Pool(multiprocessing.cpu_count())
-    pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat), datalist)
+    #pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat), datalist)
+
+    pool_results = []
+    for x in datalist:
+        pool_results.append(pool_print_blocklist(x,outputformat))
         
     results = {}
     for item in pool_results:
@@ -322,6 +326,7 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
 
     sequence1 = ""
     sequence2 = ""
+    block_identity = 0.0
     if(len(cds_)==len(gene_)):
         sequence1 = gene_
         sequence2 = cds_
@@ -335,9 +340,8 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
         alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
         sequence1, sequence2 = alignment[0][0],alignment[0][1]
 
-    block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
-
     aln_length = len(sequence1)
+    block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
 
     string_to_print = cdsid + "\t" + geneid + "\t" + str(aln_length) + "\t" + str(block_qs) + "\t" + str(block_qe) + "\t" + str(block_ss) +  "\t" + str(block_se) + "\t" + str(block_identity) +  "\t" + gene[block_ss-2:block_ss] + "<Exon>" + gene[block_se:block_se+2] + "\n"
     

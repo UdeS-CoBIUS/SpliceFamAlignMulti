@@ -61,8 +61,8 @@ def build_arg_parser():
     """
 
     parser = argparse.ArgumentParser(description="SpliceFamAlign")
-    parser.add_argument('-c', '--choiceStructure', help="Method used to infer splicing structure when a splicing structure file is not given: blast or splign")
-    
+    parser.add_argument('-c', '--choiceStructure', help="Method used to infer splicing structure when a splicing structure file is not given: blast or splign", default = "splign")
+    parser.add_argument('-pm', '--pairwiseMethod', help="Method used to compute pairwise spliced alignment: sfa or splign", default = "sfa")
     parser.add_argument('-s', '--step', help="The method goes until Step 1, 2, or 3: 1, 2 or 3 (required)")
     parser.add_argument('-ce', '--compareExon', help="The method includes in Step2 a comparison of exons: Yes or No (required)")
     
@@ -78,7 +78,7 @@ def build_arg_parser():
 
     return parser
 
-if __name__ == '__main__':
+def main():
     """
     This is the main function, it takes all input arguments and launches
         all module of the project
@@ -112,6 +112,7 @@ if __name__ == '__main__':
     outputPrefix = args.outputPrefix
     outputFormat = args.outputFormat
     choice = args.choiceStructure
+    pairwiseMethod = args.pairwiseMethod
     step = args.step
     compareExon = args.compareExon
     
@@ -121,32 +122,37 @@ if __name__ == '__main__':
     if (outputFormat == None):
         print "Argument -of <outputformat> is required : list or aln"
 
-    if (choice == 'splign'):
-        print "splign is used to infer structure information"
-    elif(choice == 'blast'):
-        print "blast is used to infer structure information"
-
     if(outputPrefix != None and outputFormat != None):
         print "Retrieving input data..."
         sourceData,targetData = get_data_from_files(args)
         nbinitialSource = len(sourceData)
 
         # Compute all  pairwise alignments for source CDS and target gene
+        temps=time.time()
         print "Comparing sequences..."
+        comparisonResults = spliceAlignment(sourceData, targetData, step, compareExon, choice, pairwiseMethod, outputPrefix)
+        print(time.time()-temps)
 
-        comparisonResults = spliceAlignment(sourceData, targetData, step, compareExon, choice, outputPrefix)
         # Compute splicing orthologs
+        temps=time.time()
         print "Computing splicing ortholog groups..."
         orthologyGroups = computeOrthology(sourceData,targetData,comparisonResults)
+        print(time.time()-temps)
+
+        temps=time.time()
         print "Completing orthology groups with putative non-annotated CDS..."
         extendedSourceData,extendedOrthologyGroups = completeOrthology(sourceData,targetData,comparisonResults,orthologyGroups)
+        print(time.time()-temps)
         
         # write the results in output files
-        print "Writting output files..."
-        
+        temps=time.time()
+        print "Writting output files..."        
         writeOutfile(outputPrefix,outputFormat,extendedSourceData,targetData,
                      extendedOrthologyGroups,
                      comparisonResults,nbinitialSource)
+        print(time.time()-temps)
+
         
-        
+if __name__ == '__main__':
+    main()
 
