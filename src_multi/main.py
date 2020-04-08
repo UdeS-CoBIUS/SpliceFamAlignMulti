@@ -132,13 +132,19 @@ def parseResultFile(resultfile,sourcedata,idty_threshold):
                     endGene			=	int(tab[6])
                     part_CDS_Gene 	= 	[beginCDS, endCDS, beginGene, endGene]
                     part_CDS_Gene_idty = float(tab[7])
-                    # if(idGene == cds2gene[idCDS]):
-                    #     if(part_CDS_Gene_idty != 1.0):
-                    #         print(idCDS,idGene)
+                    if(idGene == cds2gene[idCDS]):
+                        if(part_CDS_Gene_idty != 1.0):
+                            print("WARNING : check exon locations of ",idCDS,"in",idGene, "; exons with less than 100% identity")
 
                     if(part_CDS_Gene_idty >= idty_threshold and 0 <= beginCDS <= endCDS and 0 <= beginGene <= endGene):
                         CDS_GENE[1].append(part_CDS_Gene)
                         CDS_GENE_idty.append(part_CDS_Gene_idty)
+                if(len(tab) == 7):
+                    idCDS			= 	tab[0]
+                    idGene			= 	tab[1]
+                    if(idGene == cds2gene[idCDS]):
+                        print("WARNING : check exon locations of ",idCDS,"in",idGene,"; missing exons")
+
                 i += 1
 
             if(idGene not in geneexon.keys()):
