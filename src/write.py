@@ -85,11 +85,11 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
         j += 1
 
     p = Pool(multiprocessing.cpu_count())
-    #pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat), datalist)
+    pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat), datalist)
 
-    pool_results = []
-    for x in datalist:
-        pool_results.append(pool_print_blocklist(x,outputformat))
+    #pool_results = []
+    #for x in datalist:
+        #pool_results.append(pool_print_blocklist(x,outputformat))
         
     results = {}
     for item in pool_results:
