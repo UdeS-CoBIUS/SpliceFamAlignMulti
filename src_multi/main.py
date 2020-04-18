@@ -310,7 +310,7 @@ def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,
 
     #results = []
     #for mblocknum in mblocklistnum:
-        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids))
+        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod))
         
     for id in all_ids:
         aln[id] = ""
