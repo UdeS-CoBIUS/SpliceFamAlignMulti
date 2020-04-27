@@ -17,6 +17,8 @@ import newick
 import numpy
 from collections import Counter
 from Bio import pairwise2
+from scipy import stats
+from write import *
 
 MIN_FUSION = 0.3
 MIN_ADD = 0.3
@@ -24,15 +26,21 @@ MIN_IDENTITY1 = 0.5
 MIN_IDENTITY2 = 0.3
 MIN_DIFFLENGTH = 31
 
-def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,compareExon):
+def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,compareExon,msamethod):
     rank = {} #dict: sequence_id -> index of sequences in matrix comparisonresults (lines:genes; columns:cds)
     list_cds = {} #dict: gene_id -> list of its cdsid
+    all_gene_ids = []
+    all_cds_ids = []
+    cds2geneid = {}
+    gene2cdsid = {}
+
     i = 0
     # fill rank and and initialize list_cds
     for gene in targetdata:
         geneid,null = gene
+        all_gene_ids.append(geneid)
         rank[geneid] = i
-        list_cds[geneid] = []
+        gene2cdsid[geneid] = []
         i += 1
     allcdsseq = {} #dict: cds_id -> cds sequence
     # fill list_cds and allcdsseq
@@ -40,16 +48,224 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
         cds = extendedsourcedata[j]
         cdsid,cdsseq,cdsgeneid,null = cds
         rank[cdsid] = j
+        all_cds_ids.append(cdsid)
+        cds2geneid[cdsid] = cdsgeneid
         allcdsseq[cdsid] = cdsseq
-        list_cds[cdsgeneid].append(cdsid)
+        gene2cdsid[cdsgeneid].append(cdsid)
         j += 1
 
     #print(tree)
     t = newick.loads(tree)
 
-    mblocklist = compute_msa_recursif(extendedsourcedata,nbinitialsource,t[0],rank,list_cds,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon)[0]
-    
+    mblocklist = compute_msa_recursif(extendedsourcedata,nbinitialsource,t[0],rank,gene2cdsid,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon)[0]
+
+    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids)
+
+    mblocklist = merge_msa(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank,allcdsseq)
+
+    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids)
+    mblocklist = move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank)
+
     return mblocklist 
+
+def trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,
+             comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids):
+    all_ids = []
+    all_ids =all_gene_ids + all_cds_ids
+    mblocklistnum = []
+    for i in range(len(mblocklist)):
+        mblocklistnum.append([i, mblocklist[i]])
+    p = Pool(multiprocessing.cpu_count())
+    results = p.map(partial(pool_write_microalignment,targetdata=targetdata,
+                            extendedsourcedata=extendedsourcedata,
+                            nbinitialsource=nbinitialsource,
+                            all_ids=all_ids,msamethod=msamethod),
+                    mblocklistnum)
+    mblocklist_start = []
+    list_start = []
+    mblocklist_end = []
+    list_end = []
+
+    nb_block = len(mblocklist)    
+    for i in range(nb_block):
+        mblock = mblocklist[i]
+        all_ids = list(mblock.keys())
+        aln_len = len(results[i][all_ids[0]])
+        start_mode = -1
+        start_set = []
+        end_mode = -1
+        end_set = []
+
+        aln_pos = {}
+        for id in all_ids:
+            aln_pos[id]=0
+        for k in range(aln_len):
+            for id in all_ids:
+                if(results[i][id][k] != '-'):
+                    aln_pos[id] += 1
+                    if(aln_pos[id] == 1):
+                         start_set.append(k)
+                    if(aln_pos[id] == mblock[id][1]-mblock[id][0]):
+                        end_set.append(k)
+        s_mode = stats.mode(start_set)
+        start_mode = s_mode[0][0]
+        e_mode = stats.mode(end_set)
+        end_mode = e_mode[0][0]
+        mblock_start = {}
+        mblock_end = {}
+        for id in all_ids:
+            nb_start = 0
+            for k in range(start_mode):
+                if(results[i][id][k] != '-'):
+                    nb_start += 1
+            if(nb_start > 0 and results[i][id][start_mode] != '-'):
+                mblock_start[id]=[mblock[id][0],mblock[id][0]+nb_start]
+                mblocklist[i][id][0] += nb_start
+            nb_end = 0
+            for k in range(end_mode+1,aln_len):
+                if(results[i][id][k] != '-'):
+                    nb_end += 1
+            if(nb_end > 0 and results[i][id][end_mode] != '-'):
+                mblock_end[id]=[mblock[id][1]-nb_end,mblock[id][1]]
+                mblocklist[i][id][1] -= nb_end
+        if(len(list(mblock_start.keys()))>0):
+            mblocklist_start.append(mblock_start)
+            list_start.append(i)
+        if(len(list(mblock_end.keys()))>0):
+            mblocklist_end.append(mblock_end)
+            list_end.append(i)
+
+    mblocklist = order_mblocklist(mblocklist+mblocklist_start+mblocklist_end)
+    return mblocklist
+
+def merge_msa(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank,allcdsseq):
+    mblocklist = merge_compatible_unordered(mblocklist,allcdsseq)
+    mblocklist_prec_nb = []
+    mblocklist_nb = [len(m.keys()) for m in mblocklist]
+    while(mblocklist_prec_nb != mblocklist_nb):
+        print("******************************")
+        mblocklist_prec_nb = mblocklist_nb
+        mblocklist = move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank)
+        mblocklist_nb = [len(m.keys()) for m in mblocklist]
+    #mblocklist = merge_consecutive(mblocklist)
+    return mblocklist
+
+def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank):
+    for i in range(len(mblocklist)):
+        mblock1 = mblocklist[i]
+        support_id = {}
+        for id1 in mblock1.keys():
+            support_id[id1] = [[]]* len(mblocklist)
+    
+        for id1 in mblock1.keys():
+            for j in list(range(i))+list(range(i+1,len(mblocklist))):
+                mblock2 = mblocklist[j]
+                support_id[id1][j] = []
+                if(len(list(mblock1.keys())) < len(list(mblock2.keys()))):
+                   for id2 in mblock2.keys():
+                       if(id1 in all_cds_ids and id2 in all_gene_ids and cds2geneid[id1] != id2):
+                           c = rank[id1]
+                           g = rank[id2]
+                           null,blocklist,null,null,null = comparisonresults[g][c]
+                           blocklist_idty = comparisonresults_idty[g][c]
+                           overlap, block, block_idty, block1 = exists_overlap(blocklist,blocklist_idty,mblock1[id1],mblock2[id2])
+                           if (overlap and block1 != [-1,-1,-1,-1] and 1.0*(block1[1]-block1[0])/(mblock1[id1][1]-mblock1[id1][0]) >= 0.5):
+                               support_id[id1][j].append([id2,block,block_idty, block1])
+
+        #print(mblock1)
+        for id1 in set(mblock1.keys())&set(all_cds_ids):
+            k = numpy.argmax([len(x) for x in support_id[id1]])
+            if(len(support_id[id1][k]) != 0):
+                nb_support = 0
+                pid = 0
+                extremity = 0
+                move = True
+                mblock2 = mblocklist[k]
+                print(i,k,id1)
+                if(id1 in mblock1.keys()):
+                    geneid1 = cds2geneid[id1]
+                    print(mblock1[id1],geneid1,len(support_id[id1][k]),len(set(mblocklist[k].keys())&set(all_gene_ids)))
+                    for l in range(min(3,len(support_id[id1][k]))):
+                        id2,block,block_idty, block1 = support_id[id1][k][l]
+                        #print(id2,mblock2[id2],block,block1,block_idty)
+                        if(0.33 <= 1.0 *(mblock1[id1][1]-mblock1[id1][0])/(mblock2[id2][1]-mblock2[id2][0]) <= 3) or (geneid1 in mblock2.keys() and (mblock1[geneid1][1]==mblock2[geneid1][0] or mblock2[geneid1][1]==mblock1[geneid1][0])):
+                            nb_support += 1
+                        #if(block_idty > 0.33):
+                        #    pid += 1
+                        #if((mblock1[id1][0]==block1[0] and mblock2[id2][0]==block1[2]) or (mblock1[id1][1]==block1[1] and mblock2[id2][1]==block1[3])):
+                        #    extremity += 1
+                    #if (nb_support > 1) and (extremity >= 1):# or pid >= 1:# or 1.0*len(support_id[id1][k])/len(set(mblocklist[k].keys())&set(all_gene_ids)) >= 0.25:
+                    if (nb_support >= 1):
+                        print("move_nb_support")
+                        
+                        for l in list(range(i+1,k))+list(range(k+1,i)):
+                            if(geneid1 in mblocklist[l].keys()):
+                                move = False
+                        if(geneid1 in mblock2.keys() and mblock1[geneid1][1]!=mblock2[geneid1][0] and mblock2[geneid1][1]!=mblock1[geneid1][0]):
+                            move = False
+                        if(move):
+                            print("move_order")
+                            if(geneid1 in mblocklist[k].keys()):
+                                mblocklist[k][geneid1] = [min(mblocklist[k][geneid1][0],mblocklist[i][geneid1][0]),max(mblocklist[k][geneid1][1],mblocklist[i][geneid1][1])]
+                            else:
+                                mblocklist[k][geneid1] = mblocklist[i][geneid1]
+                            del(mblocklist[i][geneid1])
+                            for cdsid1 in set(gene2cdsid[geneid1])& set(mblocklist[i].keys()):
+                                if(cdsid1 in mblocklist[k].keys()):
+                                    mblocklist[k][cdsid1] = [min(mblocklist[k][cdsid1][0],mblocklist[i][cdsid1][0]),max(mblocklist[k][cdsid1][1],mblocklist[i][cdsid1][1])]
+                                else:
+                                    mblocklist[k][cdsid1] = mblocklist[i][cdsid1]
+                                del(mblocklist[i][cdsid1])
+                        #else:
+                            #print("no_move_order")
+                    #else:
+                        #print("no_move_nb_support")
+                    
+                    
+    for i in range(len(mblocklist)-1,-1,-1):
+        if(len(mblocklist[i].keys())==0):
+            del(mblocklist[i])
+            print("del",i)
+
+    return mblocklist
+
+def exists_overlap(blocklist,blocklist_idty,cds_block,gene_block):
+    r = 0
+    for block in blocklist:
+        if((block[3] > gene_block[0] and gene_block[1] > block[2])
+                and (block[1] > cds_block[0] and cds_block[1] > block[0])):
+            block1 = intersect(block,cds_block,gene_block)
+            return True, block, blocklist_idty[r], block1
+        r += 1
+    return False, [], 0.0, []
+
+def intersect(block,cds_block,gene_block):
+    intersect_cds = [max(block[0],cds_block[0]),min(block[1],cds_block[1])]
+    equivalent_gene = [block[2]+intersect_cds[0]-block[0],min(block[2]+intersect_cds[1]-block[0],block[3])]
+    if(equivalent_gene[0] <  equivalent_gene[1]):
+        intersect_cds[1] = intersect_cds[0] + equivalent_gene[1]- equivalent_gene[0]
+        intersect_gene = [max(equivalent_gene[0],gene_block[0]),min(equivalent_gene[1],gene_block[1])]
+        if(intersect_gene[0] <  intersect_gene[1]):
+            intersect_cds = [intersect_cds[0]+intersect_gene[0]-equivalent_gene[0],intersect_cds[0]+intersect_gene[1]-equivalent_gene[0]]
+        else:
+            return [-1,-1,-1,-1]
+    else:
+        return [-1,-1,-1,-1]
+    return intersect_cds + intersect_gene
+    
+# def intersect_end(block,cds_block,gene_block):
+#     intersect_cds = [max(block[0],cds_block[0]),min(block[1],cds_block[1])]
+#     equivalent_gene = [max(block[3]+intersect_cds[0]-block[1],block[2]),block[3]-(block[1]-intersect_cds[1])]
+#     if(equivalent_gene[0] <  equivalent_gene[1]):
+#         intersect_cds[0] = intersect_cds[1] - (equivalent_gene[1]- equivalent_gene[0])
+#         intersect_gene = [max(equivalent_gene[0],gene_block[0]),min(equivalent_gene[1],gene_block[1])]
+#         if(intersect_gene[0] <  intersect_gene[1]):
+#             intersect_cds = [intersect_cds[1]+intersect_gene[0]-equivalent_gene[1],intersect_cds[1]-(equivalent_gene[1]-intersect_gene[1])]
+#         else:
+#             return [-1,-1,-1,-1]
+#     else:
+#         return [-1,-1,-1,-1]
+#     return intersect_cds + intersect_gene
 
 # recursively compute msa at each node of a tree, from leaves to root
 def compute_msa_recursif(extendedsourcedata,nbinitialsource,node,rank,list_cds,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon):
@@ -711,12 +927,13 @@ def merge(mblocklistLeft,mblocklistRight,geneidLeft,geneidRight,rank,list_cds,co
 
     mblocklist= order_mblocklist(mblocklist)
     mblocklist = merge_overlapping(mblocklist)
+    #mblocklist = merge_consecutive(mblocklist)
     if(compareExon == 'Yes'):
         mblocklist = merge_compatible_unordered(mblocklist,allcdsseq)
         
     return mblocklist
                 
-
+                
 
 def order_mblocklist(mblocklist):
     """
@@ -764,7 +981,30 @@ def merge_overlapping(mblocklist):
     mblocklist = order_mblocklist(mblocklist)
 
     return mblocklist
-                    
+
+def merge_consecutive(mblocklist):
+    mblocklist = order_mblocklist(mblocklist)
+    for i in range(len(mblocklist)-1,0,-1):
+        for j in range(i-1,-1,-1):
+            common_keys = list(set(mblocklist[i].keys())&set(mblocklist[j].keys()))
+            if(len(common_keys) > 0 and (len(common_keys) == len(mblocklist[i].keys()) or len(common_keys) == len(mblocklist[j].keys()))):
+                consecutive = True
+                for id in common_keys:
+                    if(mblocklist[j][id][1] != mblocklist[i][id][0]):
+                        consecutive = False
+                        break
+                if(consecutive):
+                    for id in list(mblocklist[i].keys()):
+                        if(id in common_keys):
+                           mblocklist[j][id] = [min(mblocklist[j][id][0],mblocklist[i][id][0]), max(mblocklist[j][id][1],mblocklist[i][id][1])]
+                        else:
+                           mblocklist[j][id] = mblocklist[i][id]
+                    del(mblocklist[i])
+                    break
+    mblocklist = order_mblocklist(mblocklist)
+
+    return mblocklist
+
 def partial_order(mblocklist):
     order = []
     before = 0
@@ -812,9 +1052,6 @@ def merge_compatible_unordered(mblocklist,allcdsseq):
                         for k in order[i][after]-set([-1,len(mblocklist)]):
                              order[k][before].add(i)
                         to_delete.append(j)
-                        #print("merged",lengthi,lengthj, lengthi%3 == lengthj%3, identity)
-                    #else:
-                        #print("not merged", abs(lengthi - lengthj), lengthi%3 == lengthj%3, identity)
 
     to_delete.sort(reverse = True)
     for i in to_delete:
