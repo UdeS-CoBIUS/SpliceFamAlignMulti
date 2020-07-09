@@ -311,7 +311,7 @@ def main():
             tree = compute_tree(sourcedata,targetdata,comparisonresults,comparisonresults_idty,nbinitialsource)
 
         #print(tree)
-        mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,args.compareExon,args.msaMethod)
+        mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,args.compareExon,args.msaMethod,outputprefix)
         print(time.time()-temps)
 
         temps=time.time()

@@ -26,7 +26,7 @@ MIN_IDENTITY1 = 0.5
 MIN_IDENTITY2 = 0.3
 MIN_DIFFLENGTH = 31
 
-def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,compareExon,msamethod):
+def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,tree,compareExon,msamethod,outputprefix):
     rank = {} #dict: sequence_id -> index of sequences in matrix comparisonresults (lines:genes; columns:cds)
     list_cds = {} #dict: gene_id -> list of its cdsid
     all_gene_ids = []
@@ -59,11 +59,11 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
 
     mblocklist = compute_msa_recursif(extendedsourcedata,nbinitialsource,t[0],rank,gene2cdsid,comparisonresults,comparisonresults_idty,geneexon,cdsexon,allcdsseq,compareExon)[0]
 
-    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids)
+    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids,outputprefix)
 
     mblocklist = merge_msa(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank,allcdsseq)
 
-    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids)
+    mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids,outputprefix)
     mblocklist = move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank)
 
     mblocklist = remove_genemblocks(mblocklist,all_cds_ids, all_gene_ids)
@@ -89,7 +89,7 @@ def remove_genemblocks(mblocklist,all_cds_ids, all_gene_ids):
     return mblocklist
     
 def trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,
-             comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids):
+             comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids,outputprefix):
     all_ids = []
     all_ids =all_gene_ids + all_cds_ids
     mblocklistnum = []
@@ -99,7 +99,8 @@ def trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,
     results = p.map(partial(pool_write_microalignment,targetdata=targetdata,
                             extendedsourcedata=extendedsourcedata,
                             nbinitialsource=nbinitialsource,
-                            all_ids=all_ids,msamethod=msamethod),
+                            all_ids=all_ids,msamethod=msamethod,
+                            outputprefix=outputprefix),
                     mblocklistnum)
     mblocklist_start = []
     list_start = []
