@@ -66,8 +66,28 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
     mblocklist = trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids)
     mblocklist = move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank)
 
+    mblocklist = remove_genemblocks(mblocklist,all_cds_ids, all_gene_ids)
+    
     return mblocklist 
 
+def remove_genemblocks(mblocklist,all_cds_ids, all_gene_ids):
+    to_delete = []
+    for i in range(len(mblocklist)):
+        nbcds = 0
+        for id in mblocklist[i].keys():
+            if id in all_cds_ids:
+                nbcds += 1
+        if(nbcds == 0):
+            to_delete.append(i)
+            
+    to_delete.sort(reverse = True)
+    for i in to_delete:
+        del(mblocklist[i])
+
+    mblocklist = order_mblocklist(mblocklist)
+
+    return mblocklist
+    
 def trim_msa(mblocklist,extendedsourcedata,targetdata,nbinitialsource,
              comparisonresults,comparisonresults_idty,rank,msamethod,allcdsseq,all_gene_ids,all_cds_ids):
     all_ids = []
