@@ -73,11 +73,11 @@ def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,
     for i in range(len(mblocklist)):
         mblocklistnum.append([i, mblocklist[i]])
     p = Pool(multiprocessing.cpu_count())
-    results = p.map(partial(pool_write_microalignment,targetdata=targetdata,extendedsourcedata=extendedsourcedata,nbinitialsource=nbinitialsource,all_ids=all_ids,msamethod=msamethod), mblocklistnum)
+    results = p.map(partial(pool_write_microalignment,targetdata=targetdata,extendedsourcedata=extendedsourcedata,nbinitialsource=nbinitialsource,all_ids=all_ids,msamethod=msamethod,outputprefix=outputprefix), mblocklistnum)
 
     #results = []
     #for mblocknum in mblocklistnum:
-        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod))
+        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod,outputprefix))
         
     for id in all_ids:
         aln[id] = ""
@@ -94,12 +94,12 @@ def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,
     microalignmentfile.close()
 
 
-def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod):
+def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod,outputprefix):
     aln = {}
     i = mblocknum[0]
     mblock = mblocknum[1]
-    input_muscle_file = "input_muscle.fasta"+str(i)
-    output_muscle_file = "output_muscle.fasta"+str(i)
+    input_muscle_file = outputprefix+"_input_muscle.fasta"+str(i)
+    output_muscle_file = outputprefix+"_output_muscle.fasta"+str(i)
         
     input_muscle = open(input_muscle_file,"w")
 
