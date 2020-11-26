@@ -105,7 +105,7 @@ def connect_equivalent_nodes(extendedsourcedata,targetdata,mblocklist_graph,nbin
 #                    if (((end-start+1) > (1.0/2)*(endu-startu+1)) and
 #                        ((end-start+1) > (1.0/2)*(endv-startv+1))):
                         mblocklist_graph.add_edge(u,v, idty = 1.0, connectivity = 100)
-                        print("ici",u,v)
+                        #print("ici",u,v)
                     #else:
                         #print("conflict",u,v)
     return mblocklist_graph
@@ -165,12 +165,12 @@ def poolDisconnect(cc,mblocklist_graph, nbinitialsource):
             startv,endv = [int(x) for x in motv[1:]]
             # and u and v are conflicting nodes (same sequence but different locations)
             if ((idu == idv) and (endu <= startv or endv <= startu)):
-                print(idu,startu,endu,startv,endv)
+                #print(idu,startu,endu,startv,endv)
                 #while exists a path between u and v
                 while(nx.has_path(cc_graph, u, v)):
                     #find a shortest path
                     path = nx.shortest_path(cc_graph, u, v)
-                    print("...",path)
+                    #print("...",path)
                     ## remove the smallest similarity edge among
                     ## the smallest connectivity edges on the path
                     min_connec = 100
@@ -188,7 +188,7 @@ def poolDisconnect(cc,mblocklist_graph, nbinitialsource):
                             b = path[k+1]
                         if(cur_sim < sim):
                             sim = cur_sim
-                    print("...",a,b, min_connec,min_sim)                    
+                    #print("...",a,b, min_connec,min_sim)                    
                     cc_graph.remove_edge(a,b)
     connectedcomponents = list(nx.connected_components(cc_graph))
     #print(time.time()-temps, "disconnect one cc", len(cc))
@@ -682,7 +682,7 @@ def merge_overlapping(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cd
                     # delete the mblock with the smallest number of exons
                     nb_exon_i = 0
                     nb_exon_j = 0
-                    print("delete", overlap, disjoint, "\n", mblocklist[i], mblocklist[j])
+                    #print("delete", overlap, disjoint, "\n", mblocklist[i], mblocklist[j])
                     for id in overlap+disjoint:
                         if id[0]=='g':
                             geneid = graphid2ensemblid[id]
@@ -717,7 +717,7 @@ def merge_overlapping(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cd
                             mblocklist[j] = mblocklist[i]
                             mblocklist[i] = tmp
                             to_delete.append(j)
-                    print(mblocklist[j])
+                    #print(mblocklist[j])
                                         
     to_delete.sort(reverse = True)
     for i in to_delete:
