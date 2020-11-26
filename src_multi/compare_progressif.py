@@ -164,7 +164,6 @@ def merge_msa(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comp
     mblocklist_prec_nb = []
     mblocklist_nb = [len(m.keys()) for m in mblocklist]
     while(mblocklist_prec_nb != mblocklist_nb):
-        print("******************************")
         mblocklist_prec_nb = mblocklist_nb
         mblocklist = move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, comparisonresults,comparisonresults_idty,rank)
         mblocklist_nb = [len(m.keys()) for m in mblocklist]
@@ -202,10 +201,10 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
                 extremity = 0
                 move = True
                 mblock2 = mblocklist[k]
-                print(i,k,id1)
+                #print(i,k,id1)
                 if(id1 in mblock1.keys()):
                     geneid1 = cds2geneid[id1]
-                    print(mblock1[id1],geneid1,len(support_id[id1][k]),len(set(mblocklist[k].keys())&set(all_gene_ids)))
+                    #print(mblock1[id1],geneid1,len(support_id[id1][k]),len(set(mblocklist[k].keys())&set(all_gene_ids)))
                     for l in range(min(3,len(support_id[id1][k]))):
                         id2,block,block_idty, block1 = support_id[id1][k][l]
                         #print(id2,mblock2[id2],block,block1,block_idty)
@@ -217,7 +216,7 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
                         #    extremity += 1
                     #if (nb_support > 1) and (extremity >= 1):# or pid >= 1:# or 1.0*len(support_id[id1][k])/len(set(mblocklist[k].keys())&set(all_gene_ids)) >= 0.25:
                     if (nb_support >= 1):
-                        print("move_nb_support")
+                        #print("move_nb_support")
                         
                         for l in list(range(i+1,k))+list(range(k+1,i)):
                             if(geneid1 in mblocklist[l].keys()):
@@ -225,7 +224,7 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
                         if(geneid1 in mblock2.keys() and mblock1[geneid1][1]!=mblock2[geneid1][0] and mblock2[geneid1][1]!=mblock1[geneid1][0]):
                             move = False
                         if(move):
-                            print("move_order")
+                            #print("move_order")
                             if(geneid1 in mblocklist[k].keys()):
                                 mblocklist[k][geneid1] = [min(mblocklist[k][geneid1][0],mblocklist[i][geneid1][0]),max(mblocklist[k][geneid1][1],mblocklist[i][geneid1][1])]
                             else:
@@ -246,7 +245,7 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
     for i in range(len(mblocklist)-1,-1,-1):
         if(len(mblocklist[i].keys())==0):
             del(mblocklist[i])
-            print("del",i)
+            #print("del",i)
 
     return mblocklist
 
@@ -1062,17 +1061,18 @@ def merge_compatible_unordered(mblocklist,allcdsseq):
                 if (len(pos_before & pos_after)==0):
                     lengthi,seqi = mblocklength(mblocklist[i],allcdsseq)
                     lengthj,seqj = mblocklength(mblocklist[j],allcdsseq)
-                    identity = compute_sequence_identity(seqi,seqj)
-                    if(lengthi%3 == lengthj%3 and (identity >= MIN_IDENTITY1 or (identity >= MIN_IDENTITY2 and abs(lengthi-lengthj) <= MIN_DIFFLENGTH))):
-                        for id in mblocklist[j].keys():
-                            mblocklist[i][id]=mblocklist[j][id]
-                        order[i][before] = order[i][before]|order[j][before]
-                        order[i][after] = order[i][after]|order[j][after]
-                        for k in order[i][before]-set([-1,len(mblocklist)]):
-                             order[k][after].add(i)
-                        for k in order[i][after]-set([-1,len(mblocklist)]):
-                             order[k][before].add(i)
-                        to_delete.append(j)
+                    if(lengthi > 0 and lengthj > 0):
+                        identity = compute_sequence_identity(seqi,seqj)
+                        if(lengthi%3 == lengthj%3 and (identity >= MIN_IDENTITY1 or (identity >= MIN_IDENTITY2 and abs(lengthi-lengthj) <= MIN_DIFFLENGTH))):
+                            for id in mblocklist[j].keys():
+                                mblocklist[i][id]=mblocklist[j][id]
+                            order[i][before] = order[i][before]|order[j][before]
+                            order[i][after] = order[i][after]|order[j][after]
+                            for k in order[i][before]-set([-1,len(mblocklist)]):
+                                order[k][after].add(i)
+                            for k in order[i][after]-set([-1,len(mblocklist)]):
+                                order[k][before].add(i)
+                            to_delete.append(j)
 
     to_delete.sort(reverse = True)
     for i in to_delete:
@@ -1087,11 +1087,13 @@ def mblocklength(mblock,allcdsseq):
     for id in mblock.keys():
         if(id in list(allcdsseq.keys())):
             lengths.append(mblock[id][1]-mblock[id][0])
-    length,count = Counter(lengths).most_common(1)[0]
-    for id in mblock.keys():
-        if(id in list(allcdsseq.keys()) and (mblock[id][1]-mblock[id][0]) == length):
-            seq = allcdsseq[id][mblock[id][0]:mblock[id][1]]
-            break
+    length,seq = 0, ""
+    if(len(lengths) > 0):
+        length,count = Counter(lengths).most_common(1)[0]
+        for id in mblock.keys():
+            if(id in list(allcdsseq.keys()) and (mblock[id][1]-mblock[id][0]) == length):
+                seq = allcdsseq[id][mblock[id][0]:mblock[id][1]]
+                break
     return length,seq
 
 def searchSequence(seq, listSeq):
