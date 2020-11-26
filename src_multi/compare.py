@@ -1069,7 +1069,6 @@ def merge_compatible_extremity(mblocklist):
                 
 def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds, compareExon):
 
-
     temps=time.time()
 
     mblocklist_graph, graphid2ensemblid,ensemblid2graphid,allcdsseq = create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonresults,comparisonresults_idty)
