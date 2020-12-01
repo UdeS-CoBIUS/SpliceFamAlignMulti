@@ -27,24 +27,32 @@ MAX_EXTREMITY_DIFF = 30
 # Create an initial graph
 # Nodes : segements of gene and cds aligned in blocks
 # Edges : alignments between segments
-def  create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonresults,comparisonresults_idty):
+def  create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonresults,comparisonresults_idty,cdsexon,cds2geneexon,cds2geneid):
     graphid2ensemblid = {}   # dictionnary graphid to ensemblid
     ensemblid2graphid = {}   # dictionnary graphid to ensemblid
     allcdsseq = {}
     mblocklist_graph = nx.Graph()
     nodeid = 0
     i = 0
-    # for each block in each alignment
     for gene in targetdata:
         geneid,geneseq = gene
         graphid2ensemblid["g"+str(i)] = geneid
         ensemblid2graphid[geneid] = "g"+str(i)
+        i += 1
+    for j in range(nbinitialsource):
+        cds = extendedsourcedata[j]
+        cdsid,cdsseq,cdsgeneid,null = cds
+        graphid2ensemblid["c"+str(j)] = cdsid
+        ensemblid2graphid[cdsid] = "c"+str(j)
+        allcdsseq["c"+str(j)] = cdsseq
+
+    i = 0
+    # for each block in each alignment
+    for gene in targetdata:
+        geneid,geneseq = gene
         for j in range(nbinitialsource):
             cds = extendedsourcedata[j]
             cdsid,cdsseq,cdsgeneid,null = cds
-            graphid2ensemblid["c"+str(j)] = cdsid
-            ensemblid2graphid[cdsid] = "c"+str(j)
-            allcdsseq["c"+str(j)] = cdsseq
             #print(i,j,geneid,cdsid)
             null,blocklist,null,null,null = comparisonresults[i][j]
             for k in range(len(blocklist)):
@@ -55,6 +63,11 @@ def  create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonres
                 genenode = "g"+str(i)+"_"+str(gstart)+"_"+str(gend)
                 # create a node for cds segment
                 cdsnode = "c"+str(j)+"_"+str(cstart)+"_"+str(cend)
+                segment_gene_cds = cds2genelocation(cdsid,block[:2],cdsexon,cds2geneexon)
+                gcstart,gcend = segment_gene_cds
+                gene_cds_graphid = ensemblid2graphid[cds2geneid[cdsid]]
+                gene_cds_node = gene_cds_graphid+"_"+str(gcstart)+"_"+str(gcend)
+
                 # add an edge between node
                 mblocklist_graph.add_node(genenode,
                                           id = "g"+str(i),
@@ -64,7 +77,16 @@ def  create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonres
                                           id = "c"+str(j),
                                           start = cstart,
                                           end = cend)
-                mblocklist_graph.add_edge(genenode,cdsnode, idty = comparisonresults_idty[i][j][k], connectivity = -1)
+                if(cdsgeneid == geneid):
+                    mblocklist_graph.add_edge(genenode,cdsnode, idty = comparisonresults_idty[i][j][k], connectivity = 100)
+                else:
+                    mblocklist_graph.add_edge(genenode,cdsnode, idty = comparisonresults_idty[i][j][k], connectivity = -1)
+                    mblocklist_graph.add_node(gene_cds_node,
+                                              id = gene_cds_graphid,
+                                              start = gcstart,
+                                              end = gcend)
+                    mblocklist_graph.add_edge(gene_cds_node,cdsnode, idty = 1.0, connectivity = 100)
+
                 
         i += 1
         
@@ -73,9 +95,7 @@ def  create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonres
 #  Connect that correspond to the same segments (equivalent nodes)
 def connect_equivalent_nodes(extendedsourcedata,targetdata,mblocklist_graph,nbinitialsource,geneexon,cdsexon):
     # two segments are equivalent if they overlap and
-    # their overlap is at least half of each of them and
-    # ---! and the difference between starts is less than 30
-    # ---! and the difference between ends is less than 30
+    # their overlap is at least half of each of them 
 
     nodesperseq = {}
 
@@ -105,9 +125,6 @@ def connect_equivalent_nodes(extendedsourcedata,targetdata,mblocklist_graph,nbin
 #                    if (((end-start+1) > (1.0/2)*(endu-startu+1)) and
 #                        ((end-start+1) > (1.0/2)*(endv-startv+1))):
                         mblocklist_graph.add_edge(u,v, idty = 1.0, connectivity = 100)
-                        #print("ici",u,v)
-                    #else:
-                        #print("conflict",u,v)
     return mblocklist_graph
 
 #  Compute edges connectivity : if the edge (a,b) is removed,
@@ -222,7 +239,10 @@ def pool_initialize_mblocklist(cc, graphid2ensemblid,cdsexon,geneexon):
                    or (idu[0]=='g' and [startu,endu] in geneexon[graphid2ensemblid[idu]])):
                     # keep the largest length location 
                     if(endu-startu > cur_endu-cur_startu):
-                         mblock[idu] = [startu,endu]
+                         #mblock[idu] = [startu,endu]
+                        mblock[idu][0]=min(startu,cur_startu)
+                        mblock[idu][1]=max(endu,cur_endu)
+
             # else current location is not an exon location
             else:
                 # if new location is an exon location
@@ -242,26 +262,37 @@ def pool_initialize_mblocklist(cc, graphid2ensemblid,cdsexon,geneexon):
 
 # Sort mblock by decreasing number of entries
 def sort_mblocklist(mblocklist):
+    nbgenes = []
+    for i in range(len(mblocklist)):
+        nbgenes.append(0)
+        for id in mblocklist[i].keys():
+            if(id[0] == 'g'):
+                nbgenes[-1]+=1
+            
     for i in range(len(mblocklist)):
         for j in range(1,len(mblocklist) - i):
-            if(len(mblocklist[j-1].keys()) < len(mblocklist[j].keys())):
+            #if(len(mblocklist[j-1].keys()) < len(mblocklist[j].keys())):
+            if(nbgenes[j-1] < nbgenes[j]):
                 tmp = mblocklist[j-1]
                 mblocklist[j-1] = mblocklist[j]
                 mblocklist[j] = tmp
-            #for determinism
-            elif(len(mblocklist[j-1].keys()) == len(mblocklist[j].keys())):
-                id1 = "".join(sorted(list(mblocklist[j-1].keys())))
-                id2 = "".join(sorted(list(mblocklist[j].keys())))
-                if(id1 < id2):
-                    tmp = mblocklist[j-1]
-                    mblocklist[j-1] = mblocklist[j]
-                    mblocklist[j] = tmp
-                elif(id1 == id2):
-                    id = sorted(list(mblocklist[j-1].keys()))[0]
-                    if(mblocklist[j-1][id][0] <  mblocklist[j][id][0]):
-                        tmp = mblocklist[j-1]
-                        mblocklist[j-1] = mblocklist[j]
-                        mblocklist[j] = tmp
+                tmp = nbgenes[j-1]
+                nbgenes[j-1] = nbgenes[j]
+                nbgenes[j] = tmp
+            # #for determinism
+            # elif(len(mblocklist[j-1].keys()) == len(mblocklist[j].keys())):
+            #     id1 = "".join(sorted(list(mblocklist[j-1].keys())))
+            #     id2 = "".join(sorted(list(mblocklist[j].keys())))
+            #     if(id1 < id2):
+            #         tmp = mblocklist[j-1]
+            #         mblocklist[j-1] = mblocklist[j]
+            #         mblocklist[j] = tmp
+            #     elif(id1 == id2):
+            #         id = sorted(list(mblocklist[j-1].keys()))[0]
+            #         if(mblocklist[j-1][id][0] <  mblocklist[j][id][0]):
+            #             tmp = mblocklist[j-1]
+            #             mblocklist[j-1] = mblocklist[j]
+            #             mblocklist[j] = tmp
                         
     return mblocklist
     
@@ -273,7 +304,7 @@ def create_mblocklist(mblocklist_init,graphid2ensemblid,ensemblid2graphid,gene2c
     # Add mblocks supported by at least 3 entries
     for i in range(len(mblocklist_init)):
         if(len(mblocklist_init[i].keys()) > 2):
-            mbocklist, status, initial_nbid, final_nbid  = add_mblock(mblocklist,mblocklist_init[i],graphid2ensemblid,cdsexon,geneexon)
+            mbocklist, status, initial_nbid, final_nbid  = add_mblock(mblocklist,mblocklist_init[i],graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,gene2cds,cds2geneid)
 
             mblocklist = order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
             if(status == "remove"):
@@ -284,7 +315,8 @@ def create_mblocklist(mblocklist_init,graphid2ensemblid,ensemblid2graphid,gene2c
     return mblocklist, nbremoved
 
 # Add mblock in mblocklist
-def add_mblock(mblocklist,mblock,graphid2ensemblid,cdsexon,geneexon):
+def add_mblock(mblocklist,mblock,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,gene2cds,cds2geneid):
+    #print(mblock.keys())
     initial_nbid = len(mblock.keys())
     status = ""
     if(len(mblocklist) == 0):
@@ -294,9 +326,10 @@ def add_mblock(mblocklist,mblock,graphid2ensemblid,cdsexon,geneexon):
         # compute locations of mblock according to already added mblocks 
         for i in range(len(mblocklist)):
             before,after,included,contain,overlap_before, overlap_after,overlap_ratio = compare_location(mblock,mblocklist[i])
+            #print("...",mblock.keys())
             position.append([before,after,included,contain,overlap_before, overlap_after,overlap_ratio])
 
-        mblock, pos, status = find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
+        mblock, pos, status = find_location(mblock,mblocklist,position,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,gene2cds,cds2geneid)
 
         # if location is before some location pos
         if(status == "before"):
@@ -305,7 +338,16 @@ def add_mblock(mblocklist,mblock,graphid2ensemblid,cdsexon,geneexon):
                 for k in range(1,6):
                     for id in position[i][k]:
                         if(id in mblock.keys() and  mblock[id][1] >  mblocklist[i][id][0]):
-                            mblock.pop(id)
+                            gid = ""
+                            if(id[0] == 'g'):
+                                gid = id
+                            else:
+                                gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                            mblock.pop(gid)
+                            for id in gene2cds[graphid2ensemblid[gid]]:
+                                if(ensemblid2graphid[id] in mblock.keys()):
+                                    mblock.pop(ensemblid2graphid[id])
+
             #insert mblock at location
             if(len(mblock.keys()) > 1):
                 mblocklist.insert(pos,mblock)
@@ -321,7 +363,16 @@ def add_mblock(mblocklist,mblock,graphid2ensemblid,cdsexon,geneexon):
                 for k in range(1,6):
                     for id in position[i][k]:
                         if(id in mblock.keys() and  mblock[id][1] >  mblocklist[i][id][0]):
-                            mblock.pop(id)
+                            gid = ""
+                            if(id[0] == 'g'):
+                                gid = id
+                            else:
+                                gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                            mblock.pop(gid)
+                            for id in gene2cds[graphid2ensemblid[gid]]:
+                                if(ensemblid2graphid[id] in mblock.keys()):
+                                    mblock.pop(ensemblid2graphid[id])
+
             #merge the two mblocks
             if(len(mblock.keys()) > 1):
                 for id in mblock.keys():
@@ -336,7 +387,8 @@ def add_mblock(mblocklist,mblock,graphid2ensemblid,cdsexon,geneexon):
 
 # Find location of a new  mblock in mblocklist given the positions
 #relative to each mblock in the mblocklist
-def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon):
+def find_location(mblock,mblocklist,position,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,gene2cds,cds2geneid):
+    #print("......",mblock.keys())
     status = "after"
     i = -1
     # go through mblocks while position has been found
@@ -372,7 +424,7 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
         if(nb_id > 0):
             overlap_b_rate = overlap_b_rate/nb_id
             
-        #compute min rate of overlap after
+        #compute average rate of overlap after
         overlap_a_rate = 0.0
         nb_id = 0
         for id in position[i][5]:
@@ -383,7 +435,7 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
         if(nb_id > 0):
             overlap_a_rate = overlap_a_rate/nb_id
 
-        #compute min the rate of real exon replaced by a larger block for the location type "contain"
+        #compute min rate of real exon replaced by a larger block for the location type "contain"
         erase_exon_rate = 0.0
         nb_id = 0
         for id in position[i][3]:
@@ -404,7 +456,16 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
             for k in list(range(1,4))+list(range(5,6)):
                 for id in position[i][k]:
                     if(id in mblock.keys()):
-                        mblock.pop(id)
+                        gid = ""
+                        if(id[0] == 'g'):
+                            gid = id
+                        else:
+                            gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblock.pop(gid)
+                        for id in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id] in mblock.keys()):
+                                mblock.pop(ensemblid2graphid[id])
+                                
             # correct all entries with overlapping locations to remove overlap
             for id in position[i][4]:
                 if(id in mblock.keys()):
@@ -418,7 +479,15 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
             for k in list(range(1)) + list(range(2,5)):
                 for id in position[i][k]:
                     if(id in mblock.keys()):
-                        mblock.pop(id)
+                        gid = ""
+                        if(id[0] == 'g'):
+                            gid = id
+                        else:
+                            gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblock.pop(gid)
+                        for id in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id] in mblock.keys()):
+                                mblock.pop(ensemblid2graphid[id])
             for id in position[i][5]:
                 if(id in mblock.keys()):
                     mblock[id] = [mblocklist[i][id][1],mblock[id][1]]
@@ -432,7 +501,18 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
             for k in list(range(2)) + list(range(3,6)):
                 for id in position[i][k]:
                     if(id in mblock.keys()):
-                        mblock.pop(id)
+                        gid = ""
+                        if(id[0] == 'g'):
+                            gid = id
+                        else:
+                            gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        #if(id != gid):
+                            #print(id, graphid2ensemblid[id], mblock[id], gid, cds2geneid[graphid2ensemblid[id]])
+                        mblock.pop(gid)
+                        for id in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id] in mblock.keys()):
+                                mblock.pop(ensemblid2graphid[id])
+
             status = "included"
             
         # if location is contain and no exon erased
@@ -441,7 +521,15 @@ def find_location(mblock,mblocklist,position,graphid2ensemblid,cdsexon,geneexon)
             for k in list(range(3)) + list(range(4,6)):
                 for id in position[i][k]:
                     if(id in mblock.keys()):
-                        mblock.pop(id)
+                        gid = ""
+                        if(id[0] == 'g'):
+                            gid = id
+                        else:
+                            gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblock.pop(gid)
+                        for id in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id] in mblock.keys()):
+                                mblock.pop(ensemblid2graphid[id])
             status = "contain"
         #else do not return any location
 
@@ -479,6 +567,7 @@ def compare_location(mblock,mblock_i):
 
 # Remove mblock with only only gene entries
 def remove_geneandsinglemblocks(mblocklist):
+    print("remove")
     to_delete = []
     for i in range(len(mblocklist)):
         #if(len(mblocklist[i].keys()) <= 1):
@@ -542,7 +631,7 @@ def  complete_cds(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,cds2gen
     return mblocklist
 
 # Add or correct gene location corresponding to cds location
-def add_genelocation(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,cds2geneid,cds2geneexon):
+def add_genelocation(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,cds2geneid,cds2geneexon,gene2cds):
     for i in range(len(mblocklist)):
         gene_location = {}
         cdsperlocation = {}
@@ -583,7 +672,16 @@ def add_genelocation(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,gene
                                     cend = mblocklist[i][graphid][1] + (gend - pend)
                                     mblocklist[i][graphid] = [cstart,pend]
                             else:
-                                mblocklist[i].pop(graphid)
+                                #mblocklist[i].pop(graphid)
+                                gid = ""
+                                if(graphid[0] == 'g'):
+                                    gid = graphid
+                                else:
+                                    gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[graphid]]]
+                                mblocklist[i].pop(gid)
+                                for id in gene2cds[graphid2ensemblid[gid]]:
+                                    if(ensemblid2graphid[id] in mblocklist[i].keys()):
+                                        mblocklist[i].pop(ensemblid2graphid[id])
     return mblocklist
 
 
@@ -644,10 +742,17 @@ def merge_overlapping(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cd
                             if((cid in mblocklist[i].keys())):
                                 keepi = True
 
+                        gid = id
                         if(not keepj):
-                            mblocklist[j].pop(id)
+                            mblocklist[j].pop(gid)
+                            for id_ in gene2cds[graphid2ensemblid[gid]]:
+                                if(ensemblid2graphid[id_] in mblocklist[j].keys()):
+                                    mblocklist[j].pop(ensemblid2graphid[id_])
                         if(not keepi):
-                            mblocklist[i].pop(id)
+                            mblocklist[i].pop(gid)
+                            for id_ in gene2cds[graphid2ensemblid[gid]]:
+                                if(ensemblid2graphid[id_] in mblocklist[i].keys()):
+                                    mblocklist[i].pop(ensemblid2graphid[id_])
                             
                         if ((id in mblocklist[i].keys()) and (id in mblocklist[j].keys()) and not((mblocklist[i][id][1] <= mblocklist[j][id][0]) or (mblocklist[j][id][1] <= mblocklist[i][id][0]))):
                             overlap.append(id)
@@ -759,13 +864,6 @@ def order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds
                 else:
                     eq.append(id)
             if(len(inf) > len(sup + eq)):
-                # if(len(sup + eq) >  0):
-                    # print("inf",len(sup), len(inf), len(eq),"conflicts in order")
-                    # print(inf[0],mblocklist[j][inf[0]][0], mblocklist[min][inf[0]][0])
-                    # if(len(sup) >  0):
-                    #     print(sup[0],mblocklist[j][sup[0]][0], mblocklist[min][sup[0]][0])
-                    # if(len(eq) >  0):
-                    #     print(seq[0],mblocklist[j][eq[0]][0], mblocklist[min][eq[0]][0])
                 for id in sup + eq:
                     if(id[0] == "g"):
                         keepj = False
@@ -777,26 +875,28 @@ def order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds
                             if((cid in mblocklist[min].keys())):
                                 keepmin = True
 
-                        if(not keepj):
-                            # print("pop", id, mblocklist[j][id])
-                            mblocklist[j].pop(id)
-                        if(not keepmin):
-                            # print("pop", id, mblocklist[min][id])
-                            mblocklist[min].pop(id)
+                        gid = id
+                        if(not keepj and gid in mblocklist[j].keys()):
+                            mblocklist[j].pop(gid)
+                        if(not keepmin and gid in mblocklist[min].keys()):
+                            mblocklist[min].pop(gid)
                     else:
                         # print("pop", id, mblocklist[j][id])
                         # print("pop", id, mblocklist[min][id])
-                        mblocklist[j].pop(id)
-                        mblocklist[min].pop(id)
+                        gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        #mblocklist[j].pop(id)
+                        #mblocklist[min].pop(id)
+                        mblocklist[j].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[j].keys()):
+                                    mblocklist[j].pop(ensemblid2graphid[id_])
+                        mblocklist[min].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[min].keys()):
+                                    mblocklist[min].pop(ensemblid2graphid[id_])
+
                 min = j
             elif(len(sup) > len(inf + eq)):
-                # if(len(inf + eq) >  0):
-                    # print("sup", len(sup), len(inf), len(eq), "conflicts in order")
-                    # print(sup[0],mblocklist[j][sup[0]][0], mblocklist[min][sup[0]][0])
-                    # if(len(inf) >  0):
-                    #     print(inf[0],mblocklist[j][inf[0]][0], mblocklist[min][inf[0]][0])
-                    # if(len(eq) >  0):
-                    #     print(eq[0],mblocklist[j][eq[0]][0], mblocklist[min][eq[0]][0])
                 for id in inf + eq:
                     if(id[0] == "g"):
                         keepj = False
@@ -808,26 +908,28 @@ def order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds
                             if((cid in mblocklist[min].keys())):
                                 keepmin = True
 
-                        if(not keepj):
-                            # print("pop", id, mblocklist[j][id])
-                            mblocklist[j].pop(id)
-                        if(not keepmin):
-                            # print("pop", id, mblocklist[min][id])
-                            mblocklist[min].pop(id)
+                        gid = id
+                        if(not keepj and gid in mblocklist[j].keys()):
+                            mblocklist[j].pop(gid)
+                        if(not keepmin and gid in mblocklist[min].keys()):
+                            mblocklist[min].pop(gid)
                     else:
                         # print("pop", id, mblocklist[j][id])
                         # print("pop", id, mblocklist[min][id])
-                        mblocklist[j].pop(id)
-                        mblocklist[min].pop(id)
+                        #mblocklist[j].pop(id)
+                        #mblocklist[min].pop(id)
+                        gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblocklist[j].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[j].keys()):
+                                    mblocklist[j].pop(ensemblid2graphid[id_])
+                        mblocklist[min].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[min].keys()):
+                                    mblocklist[min].pop(ensemblid2graphid[id_])
+
                         
             elif(len(eq) > len(inf + sup)):
-                # if(len(inf + sup) >  0):
-                    # print("eq", len(sup), len(inf), len(eq),"conflicts in order")
-                    # print(eq[0],mblocklist[j][eq[0]][0], mblocklist[min][eq[0]][0])
-                    # if(len(sup) >  0):
-                    #     print(sup[0],mblocklist[j][sup[0]][0], mblocklist[min][sup[0]][0])
-                    # if(len(inf) >  0):
-                    #     print(inf[0],mblocklist[j][inf[0]][0], mblocklist[min][inf[0]][0])
                 for id in inf + sup:
                     if(id[0] == "g"):
                         keepj = False
@@ -839,17 +941,25 @@ def order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds
                             if((cid in mblocklist[min].keys())):
                                 keepmin = True
 
-                        if(not keepj):
-                            # print("pop", id, mblocklist[j][id])
-                            mblocklist[j].pop(id)
-                        if(not keepmin):
-                            # print("pop",id,  mblocklist[min][id])
-                            mblocklist[min].pop(id)
+                        gid = id
+                        if(not keepj and gid in mblocklist[j].keys()):
+                            mblocklist[j].pop(gid)
+                        if(not keepmin and gid in mblocklist[min].keys()):
+                            mblocklist[min].pop(gid)
                     else:
                         # print("pop", id, mblocklist[j][id])
                         # print("pop", id, mblocklist[min][id])
-                        mblocklist[j].pop(id)
-                        mblocklist[min].pop(id)
+                        #mblocklist[j].pop(id)
+                        #mblocklist[min].pop(id)
+                        gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblocklist[j].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[j].keys()):
+                                    mblocklist[j].pop(ensemblid2graphid[id_])
+                        mblocklist[min].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[min].keys()):
+                                    mblocklist[min].pop(ensemblid2graphid[id_])
                 
             else:
                 # if(len(sup+inf+eq)!= 0):
@@ -865,17 +975,25 @@ def order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds
                             if((cid in mblocklist[min].keys())):
                                 keepmin = True
 
-                        if(not keepj):
-                            # print("pop", id, mblocklist[j][id])
-                            mblocklist[j].pop(id)
-                        if(not keepmin):
-                            # print("pop", id, mblocklist[min][id])
-                            mblocklist[min].pop(id)
+                        gid = id
+                        if(not keepj and gid in mblocklist[j].keys()):
+                            mblocklist[j].pop(gid)
+                        if(not keepmin and gid in mblocklist[min].keys()):
+                            mblocklist[min].pop(gid)
                     else:
                         # print("pop", id, mblocklist[j][id])
                         # print("pop", id, mblocklist[min][id])
-                        mblocklist[j].pop(id)
-                        mblocklist[min].pop(id)
+                        #mblocklist[j].pop(id)
+                        #mblocklist[min].pop(id)
+                        gid = ensemblid2graphid[cds2geneid[graphid2ensemblid[id]]]
+                        mblocklist[j].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[j].keys()):
+                                    mblocklist[j].pop(ensemblid2graphid[id_])
+                        mblocklist[min].pop(gid)
+                        for id_ in gene2cds[graphid2ensemblid[gid]]:
+                            if(ensemblid2graphid[id_] in mblocklist[min].keys()):
+                                    mblocklist[min].pop(ensemblid2graphid[id_])
         if(min != i):
             tmp = mblocklist[min]
             mblocklist[min] = mblocklist[i]
@@ -893,7 +1011,7 @@ def complete_and_merge(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,ge
     mblocklist =  order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
 
 
-    mblocklist = add_genelocation(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,cds2geneid,cds2geneexon)
+    mblocklist = add_genelocation(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,cds2geneid,cds2geneexon,gene2cds)
 
     mblocklist =  order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
 
@@ -1071,15 +1189,11 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
 
     temps=time.time()
 
-    mblocklist_graph, graphid2ensemblid,ensemblid2graphid,allcdsseq = create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonresults,comparisonresults_idty)
-
-    #connected_components = list(nx.connected_components(mblocklist_graph))
-    #print(time.time()-temps, "\n" ,len(connected_components), "initial connected components\n")
+    mblocklist_graph, graphid2ensemblid,ensemblid2graphid,allcdsseq = create_graph(targetdata, nbinitialsource, extendedsourcedata, comparisonresults,comparisonresults_idty,cdsexon,cds2geneexon,cds2geneid)
 
     mblocklist_graph = connect_equivalent_nodes(extendedsourcedata,targetdata,mblocklist_graph,nbinitialsource,geneexon,cdsexon)
 
     connected_components = list(nx.connected_components(mblocklist_graph))
-    #print(time.time()-temps, "\n" ,len(connected_components), "connected components after connection of equivalent nodes\n")
 
     new_connected_components = []
     for cc in connected_components:
@@ -1100,52 +1214,28 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
         mblocklist_init.append(pool_initialize_mblocklist(cc, graphid2ensemblid,cdsexon,geneexon))
     mblocklist_init = sort_mblocklist(mblocklist_init) 
 
-
-    #print(time.time()-temps, "\n" ,len(mblocklist_init), "initial mblocks\n")
-
     mblocklist_init = remove_geneandsinglemblocks(mblocklist_init)
 
-    #print(time.time()-temps, "\n" ,len(mblocklist_init), "initial mblocks after removing gene mblocks\n")
-
     mblocklist,nbremoved = create_mblocklist(mblocklist_init,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid,cdsexon,geneexon)
-    #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after create mblocks,", nbremoved, "initial mblocks removed\n")
     
     mblocklist = remove_geneandsinglemblocks(mblocklist)
 
-    #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after removing gene mblocks\n")
 
     mblocklist = complete_and_merge(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,geneexon,cds2geneid,cds2geneexon,gene2cds)
-
-    #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after completing cds, merging overlaps, and removing gene mblocks\n")
 
     mblocklist = complete_cds(mblocklist,graphid2ensemblid,ensemblid2graphid,cdsexon,cds2geneid,cds2geneexon)
     
     mblocklist =  order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
  
     if  compareExon == 'Yes':
-
-        #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after completing cds\n")
         
         mblocklist =  merge_compatible_unordered(mblocklist,allcdsseq)
         
-        #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after merge_compatible_unordered\n")
-
         mblocklist =  order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
 
-        # i = 1
-        # new_nb_mblock = len(mblocklist)
-        # nb_mblock = new_nb_mblock + 1
-        # while(new_nb_mblock != nb_mblock):
-        #     print("in merge")
         mblocklist = merge_compatible_ordered(mblocklist,allcdsseq)
-        #nb_mblock = new_nb_mblock
-        #new_nb_mblock = len(mblocklist)
-        #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after merge_compatible_ordered\n")
-            # i+=1
-        
+  
         mblocklist =  merge_compatible_extremity(mblocklist)
-
-        #print(time.time()-temps, "\n" ,len(mblocklist), "mblocks after merge_compatible_extremity\n")
 
         mblocklist =  order_mblocklist(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cds2geneid)
 
