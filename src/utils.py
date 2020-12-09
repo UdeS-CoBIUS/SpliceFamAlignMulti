@@ -149,8 +149,39 @@ def order(blocklist):
             blocklist[i] = tmp
     return blocklist
 
-
-    
+def compute_segment_matches(sequence1, sequence2, block_ss, block_qs, block_identity):
+    segment_matches = []
+    i1 = 0
+    i2 = 0
+    s1 = -1
+    s2 = -1
+    e1 = -1
+    e2 = -1
+    for i in range(len(sequence1)):
+        if (sequence1[i] != '-' and sequence2[i] != '-'):
+            if(s1 == -1):
+                s1 = i1
+                s2 = i2
+            i1 += 1
+            i2 += 1
+            if(i == len(sequence1) - 1):
+                e1 = i1
+                e2 = i2
+                segment_matches.append([s1+block_ss,s2+block_qs,e1-s1, block_identity])
+        else:
+            if(s1 != -1):
+                e1 = i1
+                e2 = i2
+                segment_matches.append([s1+block_ss,s2+block_qs,e1-s1, block_identity])
+                s1 = -1
+                s2 = -1
+                e1 = -1
+                e2 = -1
+            if(sequence1[i] != '-'):
+                i1 += 1
+            if(sequence2[i] != '-'):
+                i2 += 1
+    return segment_matches
 
 
 def computeAlignmentPercentIdentity(sequence1, sequence2):

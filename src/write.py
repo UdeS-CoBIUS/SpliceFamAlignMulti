@@ -93,10 +93,12 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
         
     results = {}
     for item in pool_results:
-        results[item[0] + item[1]] = [item[2], item[3]]
+        results[item[0] + item[1]] = [item[2], item[3], item[4]]
             
     resultfile_buffer = ""
     cdsexonendlistfile_buffer = ""
+    segmentfile_buffer = ""
+    
     for gene in targetdata:
         geneid,geneseq = gene
         for i in range(nbinitialsource):
@@ -104,6 +106,8 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
             cdsid,cdsseq,cdsgeneid ,null = cds
             resultfile_buffer += results[cdsid + geneid][0]+"\n"
             cdsexonendlistfile_buffer += results[cdsid + geneid][1]+"\n"
+            for startgene, startcds, length, sim in results[cdsid + geneid][2]:
+                segmentfile_buffer += geneid + "\t" + cdsid + "\t" + str(startgene)+ "\t" + str(startcds)+ "\t" + str(length)+ "\t" + sim+"\n"
             
     resultfile = open(outputprefix+"result.txt","w")
     resultfile.write(resultfile_buffer )
@@ -112,6 +116,10 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
     cdsexonendlistfile = open(outputprefix+"cdsexonendlist.txt","w")
     cdsexonendlistfile.write(cdsexonendlistfile_buffer)
     cdsexonendlistfile.close()
+
+    segmentfile = open(outputprefix+"segment.txt","w")
+    segmentfile.write(segmentfile_buffer )
+    segmentfile.close()
 
     orthologygrouplistfile_buffer = ""
     if( extendedorthologygroups != []):
@@ -131,14 +139,17 @@ def pool_print_blocklist(data, outputformat):
     cdsid,geneid,cdsseq, cdsgeneid,geneseq, blocklist, status = data
     string_result_buffer = ""
     string_cdsexonendlist_buffer = ""
+    segment_matches = []
     
     cdslength = len(cdsseq)
     string_result_buffer += cdsid + "\t" + geneid + "\t" + str(cdslength)  + "\t" + str("%.2f" % cover_percentage(blocklist,cdslength)) + "\t" + str(status)  + "\n"
-    string_result_buffer += print_blocklist(cdsid,geneid,cdsseq, geneseq, blocklist, outputformat)
+    string_res, segments = print_blocklist(cdsid,geneid,cdsseq, geneseq, blocklist, outputformat)
+    string_result_buffer += string_res
+    segment_matches += segments
     
     if(cdsgeneid == geneid):
         string_cdsexonendlist_buffer += print_exonextremitylist(cdsid, geneid, blocklist)
-    return [cdsid,geneid,string_result_buffer,string_cdsexonendlist_buffer]
+    return [cdsid,geneid,string_result_buffer,string_cdsexonendlist_buffer, segment_matches]
 
 
 
@@ -166,6 +177,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
     """
 
     string_buffer = ""
+    segment_matches = []
     cds_len = len(cds)
 
     if(len(blocklist) > 0):
@@ -178,8 +190,9 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
         
         for i in range(len(blocklist)-1):
             block = blocklist[i]
-            string_to_print = compute_aln_string(cdsid, geneid, cds, gene, block, outputformat)
+            string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, block, outputformat)
             string_buffer += string_to_print
+            segment_matches += segments
 
             next_block = blocklist[i+1]
             block_qe = block[1]
@@ -189,8 +202,9 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
                 string_buffer += string_to_print
 
         last_block = blocklist[-1]
-        string_to_print = compute_aln_string(cdsid, geneid, cds, gene, last_block, outputformat)
+        string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, last_block, outputformat)
         string_buffer += string_to_print
+        segment_matches += segments
 
         last_block_qe = last_block[1]
         if(last_block_qe < cds_len):
@@ -202,7 +216,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
         string_buffer += string_to_print
         
     #outfile.write("\n")
-    return string_buffer
+    return string_buffer, segment_matches
 
 def print_wholealignment(cdsid, geneid, cds, gene, blocklist,outfile, outputformat):
     """
@@ -341,8 +355,11 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
         sequence1, sequence2 = alignment[0][0],alignment[0][1]
 
     aln_length = len(sequence1)
+
     block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
 
+    segment_matches = compute_segment_matches(sequence1, sequence2, block_ss, block_qs, block_identity)
+    
     string_to_print = cdsid + "\t" + geneid + "\t" + str(aln_length) + "\t" + str(block_qs) + "\t" + str(block_qe) + "\t" + str(block_ss) +  "\t" + str(block_se) + "\t" + str(block_identity) +  "\t" + gene[block_ss-2:block_ss] + "<Exon>" + gene[block_se:block_se+2] + "\n"
     
     if(outputformat == "aln"):
@@ -353,7 +370,7 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
 
         string_to_print +=  aln_srspair
         
-    return string_to_print
+    return string_to_print, segment_matches
   
 def compute_unaln_string(cdsid, geneid, cds, gene,interval, outputformat):
     """
