@@ -76,6 +76,7 @@ def build_arg_parser():
 
     parser.add_argument('-of', '--outputFormat', help="Output format : list or aln (required)")
 
+    parser.add_argument('-oa', '--outputAlignment', help="Output alignment : method used to compute pairwise block alignment: zs or fsepsa", default = "zs")
     return parser
 
 def main():
@@ -111,6 +112,7 @@ def main():
     args = parser.parse_args()
     outputPrefix = args.outputPrefix
     outputFormat = args.outputFormat
+    outputAlignment = args.outputAlignment
     choice = args.choiceStructure
     pairwiseMethod = args.pairwiseMethod
     step = args.step
@@ -147,7 +149,7 @@ def main():
         # write the results in output files
         temps=time.time()
         print "Writting output files..."        
-        writeOutfile(outputPrefix,outputFormat,extendedSourceData,targetData,
+        writeOutfile(outputPrefix,outputFormat,outputAlignment,extendedSourceData,targetData,
                      extendedOrthologyGroups,
                      comparisonResults,nbinitialSource)
         print(time.time()-temps)

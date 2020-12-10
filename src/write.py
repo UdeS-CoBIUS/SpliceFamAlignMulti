@@ -54,7 +54,7 @@ def  write_input_files(outputprefix,sourcedata,targetdata):
 ## OUTPUT FILE WRITTING #####
 ############################
         
-def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extendedorthologygroups,comparisonresults,nbinitialsource):
+def writeOutfile(outputprefix,outputformat,outputalignment,extendedsourcedata,targetdata,extendedorthologygroups,comparisonresults,nbinitialsource):
     
 
     extendedsourcefile_buffer = ""
@@ -85,7 +85,7 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
         j += 1
 
     p = Pool(multiprocessing.cpu_count())
-    pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat), datalist)
+    pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat, outputalignment = outputalignment), datalist)
 
     #pool_results = []
     #for x in datalist:
@@ -135,7 +135,7 @@ def writeOutfile(outputprefix,outputformat,extendedsourcedata,targetdata,extende
         orthologygrouplistfile.write(orthologygrouplistfile_buffer)
         orthologygrouplistfile.close()
 
-def pool_print_blocklist(data, outputformat):
+def pool_print_blocklist(data, outputformat, outputalignment):
     cdsid,geneid,cdsseq, cdsgeneid,geneseq, blocklist, status = data
     string_result_buffer = ""
     string_cdsexonendlist_buffer = ""
@@ -143,7 +143,7 @@ def pool_print_blocklist(data, outputformat):
     
     cdslength = len(cdsseq)
     string_result_buffer += cdsid + "\t" + geneid + "\t" + str(cdslength)  + "\t" + str("%.2f" % cover_percentage(blocklist,cdslength)) + "\t" + str(status)  + "\n"
-    string_res, segments = print_blocklist(cdsid,geneid,cdsseq, geneseq, blocklist, outputformat)
+    string_res, segments = print_blocklist(cdsid,geneid,cdsseq, geneseq, blocklist, outputformat, outputalignment)
     string_result_buffer += string_res
     segment_matches += segments
     
@@ -153,7 +153,7 @@ def pool_print_blocklist(data, outputformat):
 
 
 
-def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
+def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat,outputalignment):
     """
     This function is the main function of the graphic 
     representation of the prédiction.
@@ -190,7 +190,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
         
         for i in range(len(blocklist)-1):
             block = blocklist[i]
-            string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, block, outputformat)
+            string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, block, outputformat,outputalignment)
             string_buffer += string_to_print
             segment_matches += segments
 
@@ -202,7 +202,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat):
                 string_buffer += string_to_print
 
         last_block = blocklist[-1]
-        string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, last_block, outputformat)
+        string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, last_block, outputformat,outputalignment)
         string_buffer += string_to_print
         segment_matches += segments
 
@@ -306,7 +306,7 @@ def print_wholealignment(cdsid, geneid, cds, gene, blocklist,outfile, outputform
     outfile.write(cds_+"\n")
 
           
-def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
+def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat,outputalignment):
     """
     This function produce the visual representation for each aligned block using a global alignment
      
@@ -351,9 +351,13 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat):
         sequence2 = cds_
         sequence1 = '-' * len(sequence2)
     else:
-        alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
-        sequence1, sequence2 = alignment[0][0],alignment[0][1]
-
+        if(outputalignment == "zs"):
+            alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
+            sequence1, sequence2 = alignment[0][0],alignment[0][1]
+        elif(outputalignment == "fsepsa"):
+            alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
+            sequence1, sequence2 = alignment[0][0],alignment[0][1]
+            
     aln_length = len(sequence1)
 
     block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
