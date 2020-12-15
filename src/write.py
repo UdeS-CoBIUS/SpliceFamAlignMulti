@@ -18,6 +18,14 @@ from functools import partial
 from contextlib import contextmanager
 from multiprocessing import Pool
 from utils import *
+import pathlib
+sys.path.append(str(os.path.abspath(os.path.dirname(sys.argv[0])))+ '/fsepsa')
+import scoring_matrix
+from scoring_matrix import *
+#import fse
+from fse import fse
+import translator
+from translator import aamap
 
 #############################
 ##  INPUT FILE WRITTING #####
@@ -355,9 +363,19 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat,outputalignm
             alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
             sequence1, sequence2 = alignment[0][0],alignment[0][1]
         elif(outputalignment == "fsepsa"):
-            alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
-            sequence1, sequence2 = alignment[0][0],alignment[0][1]
-            
+            #alignment = pairwise2.align.globalms(gene_, cds_,2,0,-10,-1)
+            #sequence1, sequence2 = alignment[0][0],alignment[0][1]
+            fsopen= -30
+	    gapopen= -11
+	    gapextend=-1
+	    fsextend=-1
+	    saa = ScoringMatrix('src/fsepsa/ressources/BLOSUM62.txt')
+	    saa.load()
+	    san = ScoringMatrix()
+	    san.init_similarity()
+	    arg = [fsopen, gapopen, gapextend, fsextend ]
+	    score, sequence1, sequence2 = fse(gene_, cds_, arg, saa, san)
+
     aln_length = len(sequence1)
 
     block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
