@@ -208,7 +208,7 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
                     for l in range(min(3,len(support_id[id1][k]))):
                         id2,block,block_idty, block1 = support_id[id1][k][l]
                         #print(id2,mblock2[id2],block,block1,block_idty)
-                        if(0.33 <= 1.0 *(mblock1[id1][1]-mblock1[id1][0])/(mblock2[id2][1]-mblock2[id2][0]) <= 3) or (geneid1 in mblock2.keys() and (mblock1[geneid1][1]==mblock2[geneid1][0] or mblock2[geneid1][1]==mblock1[geneid1][0])):
+                        if(0.33 <= 1.0 *(mblock1[id1][1]-mblock1[id1][0])/(mblock2[id2][1]-mblock2[id2][0]) <= 3) or (geneid1 in mblock1.keys() and geneid1 in mblock2.keys() and (mblock1[geneid1][1]==mblock2[geneid1][0] or mblock2[geneid1][1]==mblock1[geneid1][0])):
                             nb_support += 1
                         #if(block_idty > 0.33):
                         #    pid += 1
@@ -221,7 +221,7 @@ def move_entries(mblocklist,all_cds_ids, all_gene_ids, cds2geneid, gene2cdsid, c
                         for l in list(range(i+1,k))+list(range(k+1,i)):
                             if(geneid1 in mblocklist[l].keys()):
                                 move = False
-                        if(geneid1 in mblock2.keys() and mblock1[geneid1][1]!=mblock2[geneid1][0] and mblock2[geneid1][1]!=mblock1[geneid1][0]):
+                        if(geneid1 in mblock1.keys() and geneid1 in mblock2.keys() and mblock1[geneid1][1]!=mblock2[geneid1][0] and mblock2[geneid1][1]!=mblock1[geneid1][0]):
                             move = False
                         if(move):
                             #print("move_order")
