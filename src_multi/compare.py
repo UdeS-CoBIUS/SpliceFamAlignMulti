@@ -13,6 +13,7 @@ This module is the module that launches the comparison for all pairs of source C
 
 """
 
+import numpy
 import networkx as nx
 from collections import Counter
 from Bio import pairwise2
@@ -21,8 +22,12 @@ from functools import partial
 from contextlib import contextmanager
 from multiprocessing import Pool
 import time
+from scipy import stats
+from write import *
 
-MAX_EXTREMITY_DIFF = 30
+MIN_IDENTITY1 = 0.5
+MIN_IDENTITY2 = 0.3
+MIN_DIFFLENGTH = 31
 
 # Create an initial graph
 # Nodes : segements of gene and cds aligned in blocks
@@ -567,7 +572,7 @@ def compare_location(mblock,mblock_i):
 
 # Remove mblock with only only gene entries
 def remove_geneandsinglemblocks(mblocklist):
-    print("remove")
+    #print("remove")
     to_delete = []
     for i in range(len(mblocklist)):
         #if(len(mblocklist[i].keys()) <= 1):
@@ -1185,7 +1190,7 @@ def merge_compatible_extremity(mblocklist):
     return mblocklist
 
                 
-def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds, compareExon):
+def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds, compareExon,msamethod,outputprefix):
 
     temps=time.time()
 
@@ -1207,7 +1212,7 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
             new_connected_components.append(cc)
     connected_components = new_connected_components
 
-    print(time.time()-temps, "\n" ,len(connected_components), "connected components after disconnection of conflicts\n")
+    print(len(connected_components), "connected components after disconnection of conflicts\n")
 
     mblocklist_init = []
     for cc in connected_components:
@@ -1241,7 +1246,6 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
 
     mblocklist = changesequenceid(mblocklist,graphid2ensemblid)
 
-    print(time.time()-temps, "\n" ,len(mblocklist), "final mblocks")
 
     return mblocklist
 
