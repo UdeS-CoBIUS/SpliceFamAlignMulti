@@ -151,7 +151,7 @@ def pool_print_blocklist(data, outputformat, outputalignment):
     
     cdslength = len(cdsseq)
     string_result_buffer += cdsid + "\t" + geneid + "\t" + str(cdslength)  + "\t" + str("%.2f" % cover_percentage(blocklist,cdslength)) + "\t" + str(status)  + "\n"
-    string_res, segments = print_blocklist(cdsid,geneid,cdsseq, geneseq, blocklist, outputformat, outputalignment)
+    string_res, segments = print_blocklist(cdsid,cdsgeneid,geneid,cdsseq, geneseq, blocklist, outputformat, outputalignment)
     string_result_buffer += string_res
     segment_matches += segments
     
@@ -161,7 +161,7 @@ def pool_print_blocklist(data, outputformat, outputalignment):
 
 
 
-def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat,outputalignment):
+def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,outputalignment):
     """
     This function is the main function of the graphic 
     representation of the prédiction.
@@ -198,7 +198,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat,outputalign
         
         for i in range(len(blocklist)-1):
             block = blocklist[i]
-            string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, block, outputformat,outputalignment)
+            string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, block, outputformat,outputalignment)
             string_buffer += string_to_print
             segment_matches += segments
 
@@ -210,7 +210,7 @@ def print_blocklist(cdsid, geneid, cds, gene, blocklist,outputformat,outputalign
                 string_buffer += string_to_print
 
         last_block = blocklist[-1]
-        string_to_print,segments = compute_aln_string(cdsid, geneid, cds, gene, last_block, outputformat,outputalignment)
+        string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, last_block, outputformat,outputalignment)
         string_buffer += string_to_print
         segment_matches += segments
 
@@ -314,7 +314,7 @@ def print_wholealignment(cdsid, geneid, cds, gene, blocklist,outfile, outputform
     outfile.write(cds_+"\n")
 
           
-def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat,outputalignment):
+def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,outputalignment):
     """
     This function produce the visual representation for each aligned block using a global alignment
      
@@ -379,6 +379,9 @@ def compute_aln_string(cdsid, geneid, cds, gene,block, outputformat,outputalignm
     aln_length = len(sequence1)
 
     block_identity = "%.2f" % (1.0 * computeAlignmentPercentIdentity(sequence1, sequence2) /100)
+
+    if(cdsgeneid==geneid):
+        assert(block_identity == "1.00")
 
     segment_matches = compute_segment_matches(sequence1, sequence2, block_ss, block_qs, block_identity)
     

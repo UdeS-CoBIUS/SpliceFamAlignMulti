@@ -1,0 +1,379 @@
+CLUSTAL FORMAT for T-COFFEE Version_13.45.15.8d1d86e [http://www.tcoffee.org] [MODE:  ], CPU=0.01 sec, SCORE=970, Nseq=13, Len=1207 
+
+ppan            --------------------------------------------------
+pabe            --------------------------------------------------
+hsap            --------------------------------------------------
+ggor            ATGCGACTGAGCAGACGGTACCCAGGTAACCAAACGCTAGACCGAGATAG
+ptro            --------------------------------------------------
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       ATGCGACTGAGCAGACGGTACCCAGGTAACCAAACGCTAGACCGAGATAG
+cds0_pabe       --------------------------------------------------
+                                                                  
+
+ppan            --------------------------------------------------
+pabe            --------------------------------------------------
+hsap            --------------------------------------------------
+ggor            TCGATCCCACAAGCCTCGGCACAATTTGGCCTTGTGGGGGTATGTAGCGT
+ptro            --------------------------------------------------
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       TCGATCCCACAAGCCTCGGCACAATTTGGCCTTGTGGGGGTATGTAGCGT
+cds0_pabe       --------------------------------------------------
+                                                                  
+
+ppan            --------------------------------------------------
+pabe            --------------------------------------------------
+hsap            --------------------------------------------------
+ggor            CAAGGACTTTGTCAAATCAACCATACCAGCCTCGCATCGTGCCGCACAAC
+ptro            --------------------------------------------------
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       CAAGGACTTTGTCAAATCAACCATACCAGCCTCGCATCGTGCCGCACAAC
+cds0_pabe       --------------------------------------------------
+                                                                  
+
+ppan            ---------------------------------------ATGAGGCTTTC
+pabe            ---------------------------------------ATGCGTGCGCC
+hsap            ---------------------------------------ATGCGTCTCTC
+ggor            CTGCGACTCCTTGTTAGATTGCCTTGTCTAAGCCAGGCGATGCGACTGAG
+ptro            ---------------------------------------ATGCGACTGAG
+cds0_ppan       ---------------------------------------ATGAGGCTTTC
+cds1_ppan       ---------------------------------------ATGAGGCTTTC
+cds0_ptro       ---------------------------------------ATGCGACTGAG
+cds1_ptro       ---------------------------------------ATGCGACTGAG
+cds2_ptro       ---------------------------------------ATGCGACTGAG
+cds0_hsap       ---------------------------------------ATGCGTCTCTC
+cds0_ggor       CTGCGACTCCTTGTTAGATTGCCTTGTCTAAGCCAGGCG-----------
+cds0_pabe       ---------------------------------------ATGCGTGCGCC
+                                                                  
+
+ppan            GCAACATTACCCGTCTCAGGAAACGCCAGGCCTGCACTCGCGATCTCTTA
+pabe            TAACCAATGTCACAAGTCGACAGGCCCGACGCTGGACACTCGTTCCCTGG
+hsap            GCGAAACTACCCGAGACAGGAAACCTCAGCCCTCGACTCACGTAGCATGA
+ggor            CCAGCAGTACCCCAGTCAGGAAACCCCTACCCTGGACTCCAGATCACTCA
+ptro            CCAGCAGTACCCCAGTCAGGAAACCCCTACCCTGGACTCCAGATCACTCA
+cds0_ppan       GCAACATTACCCGTCTCAGGAAACGCCAGGCCTGCACTCGCGATCTCTTA
+cds1_ppan       GCAACATTACCCGTCTCAGGAAACGCCAGGCCTGCACTCGCGATCTCTTA
+cds0_ptro       CCAGCAGTACCCCAGTCAGGAAACCCCTACCCTGGACTCCAGATCACTCA
+cds1_ptro       CCAGCAGTACCCCAGTCAGGAAACCCCTACCCTGGACTCCAGATCACTCA
+cds2_ptro       CCAGCAGTACCCCAGTCAGGAAACCCCTACCCTGGACTCCAGATCACTCA
+cds0_hsap       GCGAAACTACCCGAGACAGGAAACCTCAGCCCTCGACTCACGTAGCATGA
+cds0_ggor       --------------------------------------------------
+cds0_pabe       TAACCAATGTCACAAGTCGACAGGCCCGACGCTGGACACTCGTTCCCTGG
+                                                                  
+
+ppan            GGACCGGCTCGCATTACGCGTTGTGGTCGTATATTACCGTAAAAAGCCTA
+pabe            AGCGGCGGCGACAACTGGCGGCGTGGCCTTACAGTTCTGCGGGGCGATTG
+hsap            AGAGCCGTGGCCCACTTGCCCTGTGGTCGTATATACAGTCAGAAACGACG
+ggor            AGACCCGGCGGCAACTCGCCCTGTGGTCTTACATACAGGCAAAAACCTTG
+ptro            AGACCCGGCGGCAACTCGCCCTGTGGTCTTACATACAGGCAAAAACCTTG
+cds0_ppan       GGACCGGCTCGCATTACGCGTTGTGGTCGTATATTACCGTAAAAAGCCTA
+cds1_ppan       GGACCGGCTCGCATTACGCGTTGTGGTCGTATATTACCGTAAAAAGCCTA
+cds0_ptro       AGACCCGGCGGCAACTCGCCCTGTGGTCTTACATACAGGCAAAAACCTTG
+cds1_ptro       AGACCCGGCGGCAACTCGCCCTGTGGTCTTACATACAGGCAAAAACCTTG
+cds2_ptro       AGACCCGGCGGCAACTCGCCCTGTGGTCTTACATACAGGCAAAAACCTTG
+cds0_hsap       AGAGCCGTGGCCCACTTGCCCTGTGGTCGTATATACAGTCAGAAACGACG
+cds0_ggor       --------------------------------------------------
+cds0_pabe       AGCGGCGGCGACAACTGGCGGCGTGGCCTTACAGTTCTGCGGGGCGATTG
+                                                                  
+
+ppan            GCTTCCCTACCGTTCCAACCACGTATCTCCCCTCGCAGCCTCAGATTATT
+pabe            ACTCGAGCGCCCTTCCAAACTCAACTCACGCCGCACTCCCTTTCATTCTT
+hsap            TCAAACCAAAGTGTCCAGCCAAGGATCTCGCCGTATGATGCGCGATGTTT
+ggor            GCAAACCAACCTTTCCAGCCCCGAATCTCACCTTACAGTCTGCGTTGTTT
+ptro            GCAAACCAACCTTTCCAGCCCCGAATCTCACCTTACAGTCTGCGTTGTTT
+cds0_ppan       GCTTCCCTACCGTTCCAACCACGTATCTCCCCTCGCAGCCTCAGATTATT
+cds1_ppan       GCTTCCCTACCGTTCCAACCACGTATCTCCCCTCGCAGCCTCAGATTATT
+cds0_ptro       GCAAACCAACCTTTCCAGCCCCGAATCTCACCTTACAGTCTGCGTTGTTT
+cds1_ptro       GCAAACCAACCTTTCCAGCCCCGAATCTCACCTTACAGTCTGCGTTGTTT
+cds2_ptro       GCAAACCAACCTTTCCAGCCCCGAATCTCACCTTACAGTCTGCGTTGTTT
+cds0_hsap       TCAAACCAAAGTGTCCAGCCAAGGATCTCGCCGTATGATGCGCGATGTTT
+cds0_ggor       --------------------------------------------------
+cds0_pabe       ACTCGAGCGCCCTTCCAAACTCAACTCACGCCGCACTCCCTTTCATTCTT
+                                                                  
+
+ppan            CGCCCAGCTCCCCTGCATTGTCCCCGCGATGACCATCACAAAGCAAGCCG
+pabe            CCTGCAGTTACCGAGTATTGACGCCTTCATGACGGTACAGAAACAGATTC
+hsap            CGTCCAGCTTGGATGCATCGTCCCTGTCATGACGCACTCCAAAAACGTGC
+ggor            CGTCCAGCTGCCATGTATCGCCCCCGCGATGACCGCCGCAAAAAGTCGCC
+ptro            CGTCCAGCTGCCATGTATCGCCCCCGCGATGACCGCCGCAAAACAGGTCC
+cds0_ppan       CGCCCAGCTCCCCTGCATTGTCCCCGCGATGACCATCACAAAGCAAGCCG
+cds1_ppan       CGCCCAGCTCCCCTGCATTGTCCCCGCGATGACCATCACAAAGCAAGCCG
+cds0_ptro       CGTCCAGCTGCCATGTATCGCCCCCGCGATGACCGCCGCAAAACAGGTCC
+cds1_ptro       CGTCCAGCTGCCATGTATCGCCCCCGCGATGACCGCCGCAAAACAGGTCC
+cds2_ptro       CGTCCAGCTGCCATGTATCGCCCCCGCGATGACCGCCGCAAAACAGGTCC
+cds0_hsap       CGTCCAGCTTGGATGCATCGTCCCTGTCATGACGCACTCCAAAAACGTGC
+cds0_ggor       ----------------------------ATGACCGCCGCAAAAAGTCGCC
+cds0_pabe       CCTGCAGTTACCGAGTATTGACGCCTTCATGACGGTACAGAAACAGATTC
+                                            *****       **        
+
+ppan            CAATGCCCGGGACGTCACACCAGTGTATGCCTGCCCCAGAAGTCACGGGG
+pabe            CTGAGGAGGGAGTACGACACTTATGTATGCCTGCTCCCCCGGTCAACCGG
+hsap            CTAGACCGGGTACTTCTCACCAGTGCATGCCTGCGCGCAGTATGACGCCC
+ggor            CGCGAACCTCGCAAGCACATCAGTGTATGCCGTTCCCCGAAATCACCGGA
+ptro            CAAGGCCCGGTACATCCCATCAGTGTATGCCAGCCCCCGAAATCACCGGC
+cds0_ppan       CAATGCCCGGGACGTCACACCAGTGTATGCCTGCCCCAGAAGTCACGGGG
+cds1_ppan       CAATGCCCGGGACGTCACACCAGTGTATGCCTGCCCCAGAAGTCACGGGG
+cds0_ptro       CAAGGCCCGGTACATCCCATCAGTGTATGCCAGCCCCCGAAATCACCGGC
+cds1_ptro       CAAGGCCCGGTACATCCCATCAGTGTATGCCAGCCCCCGAAATCACCGGC
+cds2_ptro       CAAGGCCCGGTACATCCCATCAGTGTATGCCAGCCCCCGAAATCACCGGC
+cds0_hsap       CTAGACCGGGTACTTCTCACCAGTGCATGCCTGCGCGCAGTATGACGCCC
+cds0_ggor       CGCGAACCTCGCAAGCACATCAGTGTATGCCGTTCCCCGAAATCACCGGA
+cds0_pabe       CTGAGGAGGGAGTACGACACTTATGTATGCCTGCTCCCCCGGTCAACCGG
+                *                **    ** *****    *      * *     
+
+ppan            TGTTGGTGGCGTCCAGATACCTACGAAAGCTGTCCCCCTGTACCGTCGAA
+pabe            TGTTGGTTTCAACCTCAAACTTATGAAAAGTGCTCACCCGTTAGTAATAT
+hsap            AGCTGGTGGAGGCCCAGTACCTATGAGTCTTGTAGTCCTGTGCCTTCAAA
+ggor            CTATGGTGGCGCCCGGATGTCTACGAATCATGTAGCCCTGCTCCATCTCT
+ptro            TGCTGGTGGCGCCCAGATACGTATGAATCCTGCAGCCCAGTACCCTCTAA
+cds0_ppan       TGTTGGTGGCGTCCAGATACCTACGAAAGCTGTCCCCCTGTACCGTCGAA
+cds1_ppan       TGTTGGTGGCGTCCAGATACCTACGAAAGCTGTCCCCCTGTACCGTCGAA
+cds0_ptro       TGCTGGTGGCGCCCAGATACGTATGAATCCTGCAGCCCAGTACCCTCTAA
+cds1_ptro       TGCTGGTGGCGCCCAGATACGTATGAATCCTGCAGCCCAGTACCCTCTAA
+cds2_ptro       TGCTGGTGGCGCCCAGATACGTATGAATCCTGCAGCCCAGTACCCTCTAA
+cds0_hsap       AGCTGGTGGAGGCCCAGTACCTATGAGTCTTGTAGTCCTGTGCCTTCAAA
+cds0_ggor       CTATGGTGGCGCCCGGATGTCTACGAATCATGTAGCCCTGCTCCATCTCT
+cds0_pabe       TGTTGGTTTCAACCTCAAACTTATGAAAAGTGCTCACCCGTTAGTAATAT
+                   ****     **       ** **    **    ** *          
+
+ppan            ATTGCTGCTCGTCTTTGCCCCATTTTTCCCTGTCTTTGCCTGCTGTAGGG
+pabe            ACTACGCCTAATTTATTCCCCTTATTCTTCCATGCTTCAGTGCGTTTCGG
+hsap            ACTTACGTTGATCTGGGCCCCATTCTATACGGTGCTTGCGTTTTGCTCGA
+ggor            TTTGTTATTAGTCTGGGTACCCTTGTTCACGGTGTTTGAGCGTTTAAGTA
+ptro            ACTGCTGCTTATCTGGGCCCCTTTTTTCACTGTGTTTGCGTGTTGCAGCG
+cds0_ppan       ATTGCTGCTCGTCTTTGCCCCATTTTTCCCTGTCTTTGCCTGCTGTAGGG
+cds1_ppan       ATTGCTGCTCGTCTTTGCCCCATTTTTCCCTGTCTTTGCCTGCTGTAGGG
+cds0_ptro       ACTGCTGCTTATCTGGGCCCCTTTTTTCACTGTGTTTGCGTGTTGCAGCG
+cds1_ptro       ACTGCTGCTTATCTGGGCCCCTTTTTTCACTGTGTTTGCGTGTTGCAGCG
+cds2_ptro       ACTGCTGCTTATCTGGGCCCCTTTTTTCACTGTGTTTGCGTGTTGCAGCG
+cds0_hsap       ACTTACGTTGATCTGGGCCCCATTCTATACGGTGCTTGCGTTTTGCTCGA
+cds0_ggor       TTTGTTATTAGTCTGGGTACCCTTGTTCACGGTGTTTGAGCGTTTAAGTA
+cds0_pabe       ACTACGCCTAATTTATTCCCCTTATTCTTCCATGCTTCAGTGCGTTTCGG
+                  *     *  * *     ** *  *   *  *  **             
+
+ppan            AACCTCCGGTGCAATCAGGCTCTGTCATGAAGATGTGCACCCGATCAACT
+pabe            AGCCTCCCGCCAAAGGGGGGCCTATAATGAATATGTGCGCTAGACCTGAT
+hsap            AACCTCCGACCCAGTCAGGGCCGCTTATGAATATGTGCTCACGACCTATA
+ggor            CCCCACCTGCCAAGACTGGCCCACTCATGCGTATGTGCACACGCCCTACC
+ptro            AACCACCTGCCCAGTCCGGCCCTCTCATGAAGATGTGTACACGTCCAACA
+cds0_ppan       AACCTCCGGTGCAATCAGGCTCTGTCATGAAGATGTGCACCCGATCAACT
+cds1_ppan       AACCTCCGGTGCAATCAGGCTCTGTCATGAAGATGTGCACCCGATCAACT
+cds0_ptro       AACCACCTGCCCAGTCCGGCCCTCTCATGAAGATGTGTACACGTCCAACA
+cds1_ptro       AACCACCTGCCCAGTCCGGCCCTCTCATGAAGATGTGTACACGTCCAACA
+cds2_ptro       AACCACCTGCCCAGTCCGGCCCTCTCATGAAGATGTGTACACGTCCAACA
+cds0_hsap       AACCTCCGACCCAGTCAGGGCCGCTTATGAATATGTGCTCACGACCTATA
+cds0_ggor       CCCCACCTGCCAAGACTGGCCCACTCATGCGTATGTGCACACGCCCTACC
+cds0_pabe       AGCCTCCCGCCAAAGGGGGGCCTATAATGAATATGTGCGCTAGACCTGAT
+                  ** **     *    **  *  * ***   *****  *  *  *    
+
+ppan            ATCCGTCGTTATATGATTTGTACGCGGTGTGTTTGCACTAAGCTGCCTAT
+pabe            ATTCCCCCGTACATGGTCTGTTCGCTCTGCACGTGTACCAAACTGTCGAT
+hsap            GTCCCAAGGTACATGGTATGTACGCTTTGTACCTGCACGAAGTTGCCAAT
+ggor            CTTCCCAGATTCATGATATGCAGCCTGTGTGTCTGTACGAAGTTGCCTAT
+ptro            ATCCCTAGATACATGGTTTGCACCCTCTGCGTCTGCACTAAGCTGCCTAT
+cds0_ppan       ATCCGTCGTTATATGATTTGTACGCGGTGTGTTTGCACTAAGCTGCCTAT
+cds1_ppan       ATCCGTCGTTATATGATTTGTACGCGGTGTGTTTGCACTAAGCTGCCTAT
+cds0_ptro       ATCCCTAGATACATGGTTTGCACCCTCTGCGTCTGCACTAAGCTGCCTAT
+cds1_ptro       ATCCCTAGATACATGGTTTGCACCCTCTGCGTCTGCACTAAGCTGCCTAT
+cds2_ptro       ATCCCTAGATACATGGTTTGCACCCTCTGCGTCTGCACTAAGCTGCCTAT
+cds0_hsap       GTCCCAAGGTACATGGTATGTACGCTTTGTACCTGCACGAAGTTGCCAAT
+cds0_ggor       CTTCCCAGATTCATGATATGCAGCCTGTGTGTCTGTACGAAGTTGCCTAT
+cds0_pabe       ATTCCCCCGTACATGGTCTGTTCGCTCTGCACGTGTACCAAACTGTCGAT
+                 * *     *  *** * **    *  **    ** ** **  ** * **
+
+ppan            GTTGCAGTCTCGCACGTCGCGTAAGGACGTGCTGCACGGCTTCCAGCCAT
+pabe            GTTAAGCAGTTGTTCTAGCCGTGGTGATATCCTGCATTCATACGCACCGT
+hsap            GATAACCGCTGCTACTCAGCGAAAGGACGTTCTACATGGCTTCCAGCCGT
+ggor            GCTGGCGAGCGCTTCCCAGCTCCGAGATACACTGCGAGGATTCCAACCAT
+ptro            GTTAACGTCCGCCACCCAGCGGAGGGACGTCCTGCACGGCTTCCAGCCAT
+cds0_ppan       GTTGCAGTCTCGCACGTCGCGTAAGGACGTGCTGCACGGCTTCCAGCCAT
+cds1_ppan       GTTGCAGTCTCGCACGTCGCGTAAGGACGTGCTGCACGGCTTCCAGCCAT
+cds0_ptro       GTTAACGTCCGCCACCCAGCGGAGGGACGTCCTGCACGGCTTCCAGCCAT
+cds1_ptro       GTTAACGTCCGCCACCCAGCGGAGGGACGTCCTGCACGGCTTCCAGCCAT
+cds2_ptro       GTTAACGTCCGCCACCCAGCGGAGGGACGTCCTGCACGGCTTCCAGCCAT
+cds0_hsap       GATAACCGCTGCTACTCAGCGAAAGGACGTTCTACATGGCTTCCAGCCGT
+cds0_ggor       GCTGGCGAGCGCTTCCCAGCTCCGAGATACACTGCGAGGATTCCAACCAT
+cds0_pabe       GTTAAGCAGTTGTTCTAGCCGTGGTGATATCCTGCATTCATACGCACCGT
+                * *           *    *     **    ** *     * *   ** *
+
+ppan            CGACTTGCGGCCTTATGGCGAAGAGCATGTTTGAGATGCTACAGGAGCAT
+pabe            CTCGCTGCAGTTTGATGTCTAGGTTTATGTTTGAAATGCTTCAAGAACAT
+hsap            CTACCTGTGGTCTTATGGCTTTATCAATGTTCGAGATGTTACGCGAGCAT
+ggor            CACAGTGTGGCTTCATGGCCCCAACGATGTTCGAGATGCTAGGGGACCAT
+ptro            CAACCTGTGGCCTCATGGCCAAATCCATGTTTGAGATGTTGCAGGAGCAC
+cds0_ppan       CGACTTGCGGCCTTATGGCGAAGAGCATGTTTGAGATGCTACAGGAGCAT
+cds1_ppan       CGACTTGCGGCCTTATGGCGAAGAGCATGTTTGAGATGCTACAGGAGCAT
+cds0_ptro       CAACCTGTGGCCTCATGGCCAAATCCATGTTTGAGATGTTGCAGGAGCAC
+cds1_ptro       CAACCTGTGGCCTCATGGCCAAATCCATGTTTGAGATGTTGCAGGAGCAC
+cds2_ptro       CAACCTGTGGCCTCATGGCCAAATCCATGTTTGAGATGTTGCAGGAGCAC
+cds0_hsap       CTACCTGTGGTCTTATGGCTTTATCAATGTTCGAGATGTTACGCGAGCAT
+cds0_ggor       CACAGTGTGGCTTCATGGCCCCAACGATGTTCGAGATGCTAGGGGACCAT
+cds0_pabe       CTCGCTGCAGTTTGATGTCTAGGTTTATGTTTGAAATGCTTCAAGAACAT
+                *    **  *  * *** *       ***** ** *** *    ** ** 
+
+ppan            ACTGTACCGGGGTCTGGGAGCCTACTAATGAAAACATATGAGATGAGACA
+pabe            ACGAAACCTGGAGCACGGCGGATTTCCACTCGCAGATTTACGATGGTACC
+hsap            TCGGCACCTGGCTCGTCCGGGCTGGCTGCGAAACGATATCAT--------
+ggor            TCCACACCCGGCTCCACTAGCATTCAAATTAAAAATTATTCCATGTTGCT
+ptro            ACGACACCCGGATCATCGGGCCTTGCAGTGAAACAATATCAC--------
+cds0_ppan       ACTGTACCGGGGTCTGGGAGCCTACTAATGAAAACATATGAGATGAGACA
+cds1_ppan       ACTGTACCGGGGTCTGGGAGCCTACTAATGAAAACATATGAGATGAGACA
+cds0_ptro       ACGACACCCGGATCATCGGGCCTTGCAGTGAAACAATATCAC--------
+cds1_ptro       ACGACACCCGGATCATCGGGCCTTGCAGTGAAACAATATCAC--------
+cds2_ptro       ACGACACCCGGATCATCGGGCCTTGCAGTGAAACAATATCAC--------
+cds0_hsap       TCGGCACCTGGCTCGTCCGGGCTGGCTGCGAAACGATATCAT--------
+cds0_ggor       TCCACACCCGGCTCCACTAGCATTCAAATTAAAAATTATTCC--------
+cds0_pabe       ACGAAACCTGGAGCACGGCGGATTTCCACTCGCAGATTTACGATGGTACC
+                 *   *** **  *     *  *             * *           
+
+ppan            GTCCAACGCG--------------CAGCAAATCAAGGAGGTCAAGGTAAC
+pabe            CTGTATATCTTGCTCTGAAGCTTCCTTCGAGCCGTCCAGCACCCTGAGAC
+hsap            --------------------------------------------------
+ggor            CATCATCCCTAGTTTTGAACCTGGCTACCTGCCGAGCGCTTCCTTGGTCC
+ptro            --------------------------------------------------
+cds0_ppan       GTCCAACGCG--------------CAGCAAATCAAGGAGGTCAAGGTAAC
+cds1_ppan       GTCCAACGCG--------------CAGCAAATCAAGGAGGTCAAGGTAAC
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       --------------------------------------------------
+cds0_pabe       CTGTATATCTTGCTCTGAAGCTTCCTTCGAGCCGTCCAGCACCCTGAGAC
+                                                                  
+
+ppan            TACTTTATATTCGCGGTCACGGTGCAGATCGGGTTCCGCCTCGCAGCGTT
+pabe            CAGGTTCTATGGAGCACGGTGCAGATTACCGCCATGCGCAAATAGTCACC
+hsap            --------------------------------------------------
+ggor            CCACGAGCCAAGAGAGGGGTGCTGAACTGCAATACACACAAACCTTCACA
+ptro            --------------------------------------------------
+cds0_ppan       TACTTTATATTCGCGGTCACGGTGCAGATCGGGTTCCGCCTCGCAGCGTT
+cds1_ppan       TACTTTATATTCGCGGTCACGGTGCAGATCGGGTTCCGCCTCGCAGCGTT
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       --------------------------------------------------
+cds0_pabe       CAGGTTCTATGGAGCACGGTGCAGATTACCGCCATGCGCAAATAGTCACC
+                                                                  
+
+ppan            TCATGCGAATGGCGACGGTAACATGTGCCCCAGAGTACATCGCACATACA
+pabe            GCAAAGGTGTCGCGCCGTGGACACACGACCCA-ACTGCCTCGCGTAGCCC
+hsap            --------------------------------------------------
+ggor            TCCCACGTTGGAGTTCGCGCGCGATCCACACA-CCAGAGGGAGTGCGATG
+ptro            --------------------------------------------------
+cds0_ppan       TCATGCGAATGGCGACGGTAACATGTGCCCCAGAGTACATCGCACATACA
+cds1_ppan       TCATGCGAATGGCGACGGTAACATGTGCCCCAGAGTACATCGCACATACA
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       --------------------------------------------------
+cds0_pabe       GCAAAGGTGTCGCGCCGTGGACACACGACCCA-ACTGCCTCGCGTAGCCC
+                                                                  
+
+ppan            CAG-------------GTGCCCAGTGCACCTTTGAAATCAAACCCAATCT
+pabe            AAGTCCTACATGGTTGGCGAGGAGGACAAAATTGTTACGTCGCCCCATGT
+hsap            --------------------------------------------------
+ggor            ATGCAGTGCAGGGTTGGGGTGGGGAGAGTTCGTGCTTCACGGCAGGCTGT
+ptro            --------------------------------------------------
+cds0_ppan       CAG-------------GTGCCCAGTGCACCTTTGAAATCAAACCCAATCT
+cds1_ppan       CAG-------------GTGCCCAGTGCACCTTTGAAATCAAACCCAATCT
+cds0_ptro       --------------------------------------------------
+cds1_ptro       --------------------------------------------------
+cds2_ptro       --------------------------------------------------
+cds0_hsap       --------------------------------------------------
+cds0_ggor       --------------------------------------------------
+cds0_pabe       AAGTCCTACATGGTTGGCGAGGAGGACAAAATTGTTACGTCGCCCCATGT
+                                                                  
+
+ppan            G----------------------AATGAGTCCGTCAAACTCGCCTCAGAT
+pabe            TG------------------------------------------------
+hsap            ------------------------ATGCTACGGACTAGCTCACCGCAGAT
+ggor            TGTGAGTGTCTTCCATGCTCAGAAATGCGGCGCTCAAGTTCCCCCAAATT
+ptro            ------------------------ATGCGACAGTCTAACTCCCCCCAGAT
+cds0_ppan       G----------------------A--------------------------
+cds1_ppan       G----------------------A--------------------------
+cds0_ptro       ------------------------ATGCGACAGTCTAACTCCCCCCAGAT
+cds1_ptro       ------------------------ATGCGACAGTCTAACTCCCCCCAGAT
+cds2_ptro       ------------------------ATGCGACAGTCTAACTCCCCCCAGAT
+cds0_hsap       ------------------------ATGCTACGGACTAGCTCACCGCAGAT
+cds0_ggor       ------------------------ATGCGGCGCTCAAGTTCCCCCAAATT
+cds0_pabe       TG------------------------------------------------
+                                                                  
+
+ppan            CAAAGAGGGCACGCTTACAACGTATACTCCCCGACCGAAGTGCAGGTCGG
+pabe            --------------------------------------------------
+hsap            CCACGAGGCAAAGCTATCAGACCTATATCCAAAGCCGAAGTGTAGAAGCG
+ggor            GAAGGAACCGAATCTATCTTCATTATATCCCCATCCTAGAGCGCGTCGGG
+ptro            CAAGGAGGCCAAGCTAACAAGCTTATATCCGCGCCCAAAGTGCCGATCCG
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       CAAGGAGGCCAAGCTAACAAGCTTATATCCGCGCCCAAAGTGCCGATCCG
+cds1_ptro       CAAGGAGGCCAAGCTAACAAGCTTATATCCGCGCCCAAAGTGCCGATCCG
+cds2_ptro       CAAGGAGGCCAAGCTAACAAGCTTATATCCGCGCCCAAAGTGCCGATCCG
+cds0_hsap       CCACGAGGCAAAGCTATCAGACCTATATCCAAAGCCGAAGTGTAGAAGCG
+cds0_ggor       GAAGGAACCGAATCTATCTTCATTATATCCCCATCCTAGAGCGCGTCGGG
+cds0_pabe       --------------------------------------------------
+                                                                  
+
+ppan            GTACTGCGAGCAGGCAATTCCAACGTATGGTGACGATAAGTTGCAGGCCG
+pabe            --------------------------------------------------
+hsap            GTTCCGCGAGCAGGAGATTCCAACGTATGGTGACAGTATCTTGCCGGCCC
+ggor            GGTCCGCGTCAATGAGAATGCAGAGAATGGCGACACTTTCAACCAGGCCG
+ptro            GTTCAGCCAGCAAGCGATTCCAGCGGATGGTGACCGTATCATGCCGCCCT
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       GTTCAGCCAGCAAGCGATTCCAGCGGATGGTGACCGTATCATGCCGCCCT
+cds1_ptro       GTTCAGCCAGCAAGCGATTCCAGCGGATGGTGACCGTATCATGCCGCCCT
+cds2_ptro       GTTCAGCCAGCAAGCGATTCCAGCGGATGGTGACCGTATCATGCCGCCCT
+cds0_hsap       GTTCCGCGAGCAGGAGATTCCAACGTATGGTGACAGTATCTTGCCGGCCC
+cds0_ggor       GGTCCGCGTCAATGAGAATGCAGAGAATGGCGACACTTTCAACCAGGCCG
+cds0_pabe       --------------------------------------------------
+                                                                  
+
+ppan            GAGAATGTGGCCCATTCGCAAGTGCCGTGCGCACCGTTAAGGTCAAATAA
+pabe            -----------------------------------TGACTGCTGGACCTG
+hsap            GAGTATATCGCTCATTCCCAAACGCCTTGTGCCCCATTGCGATCTAACCC
+ggor            ATGACTCTCACCCATTTTCGCGTACCCTGCCAACCTCTTAGATCTAACGC
+ptro            GAGTATATCGCCCACTCTCAGGTGCCCTGTGCGCCCTTAAGAAGTAACCC
+cds0_ppan       --------------------------------------------------
+cds1_ppan       --------------------------------------------------
+cds0_ptro       GAGTATATCGCCCACTCTCAGGTGCCCTGTGCGCCCTTAAGAAGTAACCC
+cds1_ptro       GAGTATATCGCCCACTCTCAGGTGCCCTGTGCGCCCTTAAGAAGTAACCC
+cds2_ptro       GAGTATATCGCCCACTCTCAGGTGCCCTGTGCGCCCTTAAGAAGTAACCC
+cds0_hsap       GAGTATATCGCTCATTCCCAAACGCCTTGTGCCCCATTGCGATCTAACCC
+cds0_ggor       ATGACTCTCACCCATTTTCGCGTACCCTGCCAACCTCTTAGATCTAACGC
+cds0_pabe       -----------------------------------TGACTGCTGGACCTG
+                                                                  
+
+ppan            ACTTTGA
+pabe            TTGCGAA
+hsap            CATTTGA
+ggor            TATTTGA
+ptro            AATTTGA
+cds0_ppan       -------
+cds1_ppan       -------
+cds0_ptro       AATTTGA
+cds1_ptro       AATTTGA
+cds2_ptro       AATTTGA
+cds0_hsap       CATTTGA
+cds0_ggor       TATTTGA
+cds0_pabe       TTGCGAA
+                       
+
+
+

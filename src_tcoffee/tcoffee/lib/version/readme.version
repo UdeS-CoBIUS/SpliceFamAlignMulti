@@ -1,0 +1,6 @@
+build_version.version : 13.01.xx.aft3df : xx incremented by 1 for each beta release
+minor_version.version : 13.xx.02.aft3df : xx incremented by 1 for each stable release
+major_version.version : xx.01.02.aft3df : xx incremented by 1 for each major release
+github.version        : 13.01.02.xxxxx  :  xx is updated after each github commit
+version:number.version: 13.01.02.aft3df : <major>.<minor>.<build>.<branch>
+

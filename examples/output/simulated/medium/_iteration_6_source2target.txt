@@ -1,0 +1,12 @@
+cds0_ppan ppan
+cds0_ptro ptro
+cds0_hsap hsap
+cds0_ggor ggor
+cds0_pabe pabe
+Predicted_CDS_Group1_cds0_ptro_to_ppan ppan
+Predicted_Protein_Group1_cds0_ptro_to_pabe pabe
+Predicted_CDS_Group1_cds0_ptro_to_ggor ggor
+Predicted_CDS_Group2_cds0_hsap_to_ppan ppan
+Predicted_Protein_Group2_cds0_hsap_to_pabe pabe
+Predicted_CDS_Group2_cds0_hsap_to_ptro ptro
+Predicted_CDS_Group3_cds0_pabe_to_ggor ggor

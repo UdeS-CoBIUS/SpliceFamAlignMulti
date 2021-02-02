@@ -1,0 +1,12 @@
+>cluster2 :
+cds0_hsap, cds2_hsap, cds3_ppan
+>cluster3 :
+cds0_ptro, cds2_ppan
+>cluster1 :
+cds0_pabe, cds3_ptro, cds1_pabe, cds1_hsap, cds1_ptro, cds0_ggor
+>cluster6 :
+cds0_ppan
+>cluster4 :
+cds1_ggor
+>cluster5 :
+cds2_ptro, cds1_ppan

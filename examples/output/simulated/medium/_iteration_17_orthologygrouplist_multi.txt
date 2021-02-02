@@ -1,0 +1,12 @@
+>0
+cds0_ppan
+cds1_ppan
+cds0_pabe
+cds0_hsap
+cds0_ptro
+cds1_ptro
+cds2_ptro
+
+>1
+cds0_ggor
+

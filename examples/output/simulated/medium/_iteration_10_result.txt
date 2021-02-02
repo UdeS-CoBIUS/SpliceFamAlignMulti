@@ -1,0 +1,255 @@
+cds0_ppan	ppan	1023	100.00	1
+cds0_ppan	ppan	270	0	270	0	270	1.00	<Exon>GT
+cds0_ppan	ppan	213	270	483	699	912	1.00	AG<Exon>GT
+cds0_ppan	ppan	201	483	684	1601	1802	1.00	AG<Exon>GT
+cds0_ppan	ppan	177	684	861	2025	2202	1.00	AG<Exon>GT
+cds0_ppan	ppan	162	861	1023	3000	3162	1.00	AG<Exon>
+
+cds1_ppan	ppan	849	100.00	1
+cds1_ppan	ppan	270	0	270	0	270	1.00	<Exon>GT
+cds1_ppan	ppan	189	270	459	377	566	1.00	AG<Exon>GT
+cds1_ppan	ppan	213	459	672	699	912	1.00	AG<Exon>GT
+cds1_ppan	ppan	177	672	849	2025	2202	1.00	AG<Exon>GT
+
+cds0_ptro	ppan	1023	100.00	2
+cds0_ptro	ppan	270	0	270	0	270	1.00	<Exon>GT
+cds0_ptro	ppan	213	270	483	1156	1369	1.00	AG<Exon>GT
+cds0_ptro	ppan	201	483	684	1601	1802	1.00	AG<Exon>GT
+cds0_ptro	ppan	177	684	861	2025	2202	1.00	AG<Exon>GT
+cds0_ptro	ppan	162	861	1023	3000	3162	1.00	AG<Exon>
+
+cds1_ptro	ppan	1212	100.00	2
+cds1_ptro	ppan	270	0	270	0	270	1.00	<Exon>GT
+cds1_ptro	ppan	189	270	459	377	566	1.00	AG<Exon>GT
+cds1_ptro	ppan	213	459	672	1156	1369	1.00	AG<Exon>GT
+cds1_ptro	ppan	201	672	873	1601	1802	1.00	AG<Exon>GT
+cds1_ptro	ppan	177	873	1050	2025	2202	1.00	AG<Exon>GT
+cds1_ptro	ppan	162	1050	1212	3000	3162	1.00	AG<Exon>
+
+cds0_hsap	ppan	849	100.00	1
+cds0_hsap	ppan	270	0	270	0	270	1.00	<Exon>GT
+cds0_hsap	ppan	189	270	459	377	566	1.00	AG<Exon>GT
+cds0_hsap	ppan	213	459	672	699	912	1.00	AG<Exon>GT
+cds0_hsap	ppan	177	672	849	2025	2202	1.00	AG<Exon>GT
+
+cds0_ggor	ppan	1269	81.56	5
+cds0_ggor	ppan	270	0	270	0	270	0.72	<Exon>GT
+cds0_ggor	ppan	189	270	459	377	566	0.78	AG<Exon>GT
+cds0_ggor	ppan	234	459	693	-	-
+cds0_ggor	ppan	213	693	906	699	912	0.72	AG<Exon>GT
+cds0_ggor	ppan	201	906	1107	1601	1802	0.73	AG<Exon>GT
+cds0_ggor	ppan	162	1107	1269	3000	3162	0.72	AG<Exon>
+
+cds0_pabe	ppan	1446	100.00	2
+cds0_pabe	ppan	270	0	270	0	270	0.71	<Exon>GT
+cds0_pabe	ppan	189	270	459	377	566	0.74	AG<Exon>GT
+cds0_pabe	ppan	234	459	693	699	912	0.35	AG<Exon>GT
+cds0_pabe	ppan	213	693	906	1156	1369	0.76	AG<Exon>GT
+cds0_pabe	ppan	201	906	1107	1601	1802	0.71	AG<Exon>GT
+cds0_pabe	ppan	177	1107	1284	2025	2202	0.74	AG<Exon>GT
+cds0_pabe	ppan	162	1284	1446	3000	3162	0.75	AG<Exon>
+
+cds0_ppan	pabe	1023	100.00	2
+cds0_ppan	pabe	270	0	270	0	270	0.71	<Exon>GT
+cds0_ppan	pabe	213	270	483	1342	1555	0.76	AG<Exon>GT
+cds0_ppan	pabe	201	483	684	1812	2013	0.71	AG<Exon>GT
+cds0_ppan	pabe	177	684	861	2257	2434	0.74	AG<Exon>GT
+cds0_ppan	pabe	162	861	1023	3459	3621	0.75	AG<Exon>
+
+cds1_ppan	pabe	849	100.00	3
+cds1_ppan	pabe	270	0	270	0	270	0.71	<Exon>GT
+cds1_ppan	pabe	189	270	459	558	747	0.74	AG<Exon>GT
+cds1_ppan	pabe	213	459	672	1342	1555	0.76	AG<Exon>GT
+cds1_ppan	pabe	177	672	849	2257	2434	0.74	AG<Exon>GT
+
+cds0_ptro	pabe	1023	100.00	2
+cds0_ptro	pabe	270	0	270	0	270	0.71	<Exon>GT
+cds0_ptro	pabe	213	270	483	1342	1555	0.76	AG<Exon>GT
+cds0_ptro	pabe	201	483	684	1812	2013	0.71	AG<Exon>GT
+cds0_ptro	pabe	177	684	861	2257	2434	0.74	AG<Exon>GT
+cds0_ptro	pabe	162	861	1023	3459	3621	0.75	AG<Exon>
+
+cds1_ptro	pabe	1212	100.00	2
+cds1_ptro	pabe	270	0	270	0	270	0.71	<Exon>GT
+cds1_ptro	pabe	189	270	459	558	747	0.74	AG<Exon>GT
+cds1_ptro	pabe	213	459	672	1342	1555	0.76	AG<Exon>GT
+cds1_ptro	pabe	201	672	873	1812	2013	0.71	AG<Exon>GT
+cds1_ptro	pabe	177	873	1050	2257	2434	0.74	AG<Exon>GT
+cds1_ptro	pabe	162	1050	1212	3459	3621	0.75	AG<Exon>
+
+cds0_hsap	pabe	849	100.00	3
+cds0_hsap	pabe	270	0	270	0	270	0.71	<Exon>GT
+cds0_hsap	pabe	189	270	459	558	747	0.74	AG<Exon>GT
+cds0_hsap	pabe	213	459	672	1342	1555	0.76	AG<Exon>GT
+cds0_hsap	pabe	177	672	849	2257	2434	0.74	AG<Exon>GT
+
+cds0_ggor	pabe	1269	100.00	2
+cds0_ggor	pabe	270	0	270	0	270	0.62	<Exon>GT
+cds0_ggor	pabe	189	270	459	558	747	0.65	AG<Exon>GT
+cds0_ggor	pabe	234	459	693	952	1186	0.62	AG<Exon>GT
+cds0_ggor	pabe	213	693	906	1342	1555	0.69	AG<Exon>GT
+cds0_ggor	pabe	201	906	1107	1812	2013	0.61	AG<Exon>GT
+cds0_ggor	pabe	162	1107	1269	3459	3621	0.57	AG<Exon>
+
+cds0_pabe	pabe	1446	100.00	1
+cds0_pabe	pabe	270	0	270	0	270	1.00	<Exon>GT
+cds0_pabe	pabe	189	270	459	558	747	1.00	AG<Exon>GT
+cds0_pabe	pabe	234	459	693	952	1186	1.00	AG<Exon>GT
+cds0_pabe	pabe	213	693	906	1342	1555	1.00	AG<Exon>GT
+cds0_pabe	pabe	201	906	1107	1812	2013	1.00	AG<Exon>GT
+cds0_pabe	pabe	177	1107	1284	2257	2434	1.00	AG<Exon>GT
+cds0_pabe	pabe	162	1284	1446	3459	3621	1.00	AG<Exon>
+
+cds0_ppan	hsap	1023	64.52	5
+cds0_ppan	hsap	270	0	270	0	270	1.00	<Exon>GT
+cds0_ppan	hsap	213	270	483	1399	1612	1.00	AG<Exon>GT
+cds0_ppan	hsap	201	483	684	-	-
+cds0_ppan	hsap	177	684	861	1856	2033	1.00	AG<Exon>GT
+cds0_ppan	hsap	162	861	1023	-	-
+
+cds1_ppan	hsap	849	100.00	1
+cds1_ppan	hsap	270	0	270	0	270	1.00	<Exon>GT
+cds1_ppan	hsap	189	270	459	385	574	1.00	AG<Exon>GT
+cds1_ppan	hsap	213	459	672	1399	1612	1.00	AG<Exon>GT
+cds1_ppan	hsap	177	672	849	1856	2033	1.00	AG<Exon>GT
+
+cds0_ptro	hsap	1023	64.52	5
+cds0_ptro	hsap	270	0	270	0	270	1.00	<Exon>GT
+cds0_ptro	hsap	213	270	483	1399	1612	1.00	AG<Exon>GT
+cds0_ptro	hsap	201	483	684	-	-
+cds0_ptro	hsap	177	684	861	1856	2033	1.00	AG<Exon>GT
+cds0_ptro	hsap	162	861	1023	-	-
+
+cds1_ptro	hsap	1212	70.05	5
+cds1_ptro	hsap	270	0	270	0	270	1.00	<Exon>GT
+cds1_ptro	hsap	189	270	459	385	574	1.00	AG<Exon>GT
+cds1_ptro	hsap	213	459	672	1399	1612	1.00	AG<Exon>GT
+cds1_ptro	hsap	201	672	873	-	-
+cds1_ptro	hsap	177	873	1050	1856	2033	1.00	AG<Exon>GT
+cds1_ptro	hsap	162	1050	1212	-	-
+
+cds0_hsap	hsap	849	100.00	1
+cds0_hsap	hsap	270	0	270	0	270	1.00	<Exon>GT
+cds0_hsap	hsap	189	270	459	385	574	1.00	AG<Exon>GT
+cds0_hsap	hsap	213	459	672	1399	1612	1.00	AG<Exon>GT
+cds0_hsap	hsap	177	672	849	1856	2033	1.00	AG<Exon>GT
+
+cds0_ggor	hsap	1269	87.23	4
+cds0_ggor	hsap	270	0	270	0	270	0.72	<Exon>GT
+cds0_ggor	hsap	189	270	459	385	574	0.78	AG<Exon>GT
+cds0_ggor	hsap	234	459	693	895	1129	0.73	AG<Exon>GT
+cds0_ggor	hsap	213	693	906	1399	1612	0.72	AG<Exon>GT
+cds0_ggor	hsap	201	906	1107	1856	2033	0.36	AG<Exon>GT
+cds0_ggor	hsap	162	1107	1269	-	-
+
+cds0_pabe	hsap	1446	74.90	5
+cds0_pabe	hsap	270	0	270	0	270	0.71	<Exon>GT
+cds0_pabe	hsap	189	270	459	385	574	0.74	AG<Exon>GT
+cds0_pabe	hsap	234	459	693	895	1129	0.70	AG<Exon>GT
+cds0_pabe	hsap	213	693	906	1399	1612	0.76	AG<Exon>GT
+cds0_pabe	hsap	201	906	1107	-	-
+cds0_pabe	hsap	177	1107	1284	1856	2033	0.74	AG<Exon>GT
+cds0_pabe	hsap	162	1284	1446	-	-
+
+cds0_ppan	ggor	1023	82.70	5
+cds0_ppan	ggor	270	0	270	397	667	1.00	AG<Exon>GT
+cds0_ppan	ggor	213	270	483	1839	2052	0.72	AG<Exon>GT
+cds0_ppan	ggor	201	483	684	2267	2468	0.73	AG<Exon>GT
+cds0_ppan	ggor	177	684	861	-	-
+cds0_ppan	ggor	162	861	1023	2968	3130	0.72	AG<Exon>
+
+cds1_ppan	ggor	849	100.00	3
+cds1_ppan	ggor	270	0	270	397	667	1.00	AG<Exon>GT
+cds1_ppan	ggor	189	270	459	838	1027	0.78	AG<Exon>GT
+cds1_ppan	ggor	213	459	672	1839	2052	0.72	AG<Exon>GT
+cds1_ppan	ggor	201	672	849	2267	2468	0.36	AG<Exon>GT
+
+cds0_ptro	ggor	1023	82.70	5
+cds0_ptro	ggor	270	0	270	397	667	1.00	AG<Exon>GT
+cds0_ptro	ggor	213	270	483	1839	2052	0.72	AG<Exon>GT
+cds0_ptro	ggor	201	483	684	2267	2468	0.73	AG<Exon>GT
+cds0_ptro	ggor	177	684	861	-	-
+cds0_ptro	ggor	162	861	1023	2968	3130	0.72	AG<Exon>
+
+cds1_ptro	ggor	1212	85.40	5
+cds1_ptro	ggor	270	0	270	397	667	1.00	AG<Exon>GT
+cds1_ptro	ggor	189	270	459	838	1027	0.78	AG<Exon>GT
+cds1_ptro	ggor	213	459	672	1839	2052	0.72	AG<Exon>GT
+cds1_ptro	ggor	201	672	873	2267	2468	0.73	AG<Exon>GT
+cds1_ptro	ggor	177	873	1050	-	-
+cds1_ptro	ggor	162	1050	1212	2968	3130	0.72	AG<Exon>
+
+cds0_hsap	ggor	849	100.00	3
+cds0_hsap	ggor	270	0	270	397	667	1.00	AG<Exon>GT
+cds0_hsap	ggor	189	270	459	838	1027	0.78	AG<Exon>GT
+cds0_hsap	ggor	213	459	672	1839	2052	0.72	AG<Exon>GT
+cds0_hsap	ggor	201	672	849	2267	2468	0.36	AG<Exon>GT
+
+cds0_ggor	ggor	1269	100.00	1
+cds0_ggor	ggor	270	0	270	0	270	1.00	<Exon>GT
+cds0_ggor	ggor	189	270	459	838	1027	1.00	AG<Exon>GT
+cds0_ggor	ggor	234	459	693	1282	1516	1.00	AG<Exon>GT
+cds0_ggor	ggor	213	693	906	1839	2052	1.00	AG<Exon>GT
+cds0_ggor	ggor	201	906	1107	2267	2468	1.00	AG<Exon>GT
+cds0_ggor	ggor	162	1107	1269	2968	3130	1.00	AG<Exon>
+
+cds0_pabe	ggor	1446	87.76	5
+cds0_pabe	ggor	270	0	270	397	667	0.71	AG<Exon>GT
+cds0_pabe	ggor	189	270	459	838	1027	0.65	AG<Exon>GT
+cds0_pabe	ggor	234	459	693	1282	1516	0.62	AG<Exon>GT
+cds0_pabe	ggor	213	693	906	1839	2052	0.69	AG<Exon>GT
+cds0_pabe	ggor	201	906	1107	2267	2468	0.61	AG<Exon>GT
+cds0_pabe	ggor	177	1107	1284	-	-
+cds0_pabe	ggor	162	1284	1446	2968	3130	0.57	AG<Exon>
+
+cds0_ppan	ptro	1023	100.00	1
+cds0_ppan	ptro	270	0	270	0	270	1.00	<Exon>GT
+cds0_ppan	ptro	213	270	483	1382	1595	1.00	AG<Exon>GT
+cds0_ppan	ptro	201	483	684	2158	2359	1.00	AG<Exon>GT
+cds0_ppan	ptro	177	684	861	2470	2647	1.00	AG<Exon>GT
+cds0_ppan	ptro	162	861	1023	3131	3293	1.00	AG<Exon>
+
+cds1_ppan	ptro	849	100.00	3
+cds1_ppan	ptro	270	0	270	0	270	1.00	<Exon>GT
+cds1_ppan	ptro	189	270	459	381	570	1.00	AG<Exon>GT
+cds1_ppan	ptro	213	459	672	1382	1595	1.00	AG<Exon>GT
+cds1_ppan	ptro	177	672	849	2470	2647	1.00	AG<Exon>GT
+
+cds0_ptro	ptro	1023	100.00	1
+cds0_ptro	ptro	270	0	270	0	270	1.00	<Exon>GT
+cds0_ptro	ptro	213	270	483	1382	1595	1.00	AG<Exon>GT
+cds0_ptro	ptro	201	483	684	2158	2359	1.00	AG<Exon>GT
+cds0_ptro	ptro	177	684	861	2470	2647	1.00	AG<Exon>GT
+cds0_ptro	ptro	162	861	1023	3131	3293	1.00	AG<Exon>
+
+cds1_ptro	ptro	1212	100.00	1
+cds1_ptro	ptro	270	0	270	0	270	1.00	<Exon>GT
+cds1_ptro	ptro	189	270	459	381	570	1.00	AG<Exon>GT
+cds1_ptro	ptro	213	459	672	1382	1595	1.00	AG<Exon>GT
+cds1_ptro	ptro	201	672	873	2158	2359	1.00	AG<Exon>GT
+cds1_ptro	ptro	177	873	1050	2470	2647	1.00	AG<Exon>GT
+cds1_ptro	ptro	162	1050	1212	3131	3293	1.00	AG<Exon>
+
+cds0_hsap	ptro	849	100.00	3
+cds0_hsap	ptro	270	0	270	0	270	1.00	<Exon>GT
+cds0_hsap	ptro	189	270	459	381	570	1.00	AG<Exon>GT
+cds0_hsap	ptro	213	459	672	1382	1595	1.00	AG<Exon>GT
+cds0_hsap	ptro	177	672	849	2470	2647	1.00	AG<Exon>GT
+
+cds0_ggor	ptro	1269	100.00	2
+cds0_ggor	ptro	270	0	270	0	270	0.72	<Exon>GT
+cds0_ggor	ptro	189	270	459	381	570	0.78	AG<Exon>GT
+cds0_ggor	ptro	234	459	693	827	1061	0.73	AG<Exon>GT
+cds0_ggor	ptro	213	693	906	1382	1595	0.72	AG<Exon>GT
+cds0_ggor	ptro	201	906	1107	2158	2359	0.73	AG<Exon>GT
+cds0_ggor	ptro	162	1107	1269	3131	3293	0.72	AG<Exon>
+
+cds0_pabe	ptro	1446	100.00	2
+cds0_pabe	ptro	270	0	270	0	270	0.71	<Exon>GT
+cds0_pabe	ptro	189	270	459	381	570	0.74	AG<Exon>GT
+cds0_pabe	ptro	234	459	693	827	1061	0.70	AG<Exon>GT
+cds0_pabe	ptro	213	693	906	1382	1595	0.76	AG<Exon>GT
+cds0_pabe	ptro	201	906	1107	2158	2359	0.71	AG<Exon>GT
+cds0_pabe	ptro	177	1107	1284	2470	2647	0.74	AG<Exon>GT
+cds0_pabe	ptro	162	1284	1446	3131	3293	0.75	AG<Exon>
+

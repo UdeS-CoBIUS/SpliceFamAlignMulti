@@ -1,0 +1,17 @@
+cds0_ppan ppan
+cds1_ppan ppan
+cds2_ppan ppan
+cds3_ppan ppan
+cds0_ptro ptro
+cds1_ptro ptro
+cds2_ptro ptro
+cds0_hsap hsap
+cds1_hsap hsap
+cds0_ggor ggor
+cds1_ggor ggor
+cds2_ggor ggor
+cds0_pabe pabe
+cds1_pabe pabe
+Predicted_CDS_Group2_cds1_ggor_to_ppan ppan
+Predicted_CDS_Group2_cds1_ggor_to_hsap hsap
+Predicted_CDS_Group2_cds1_ggor_to_ptro ptro
