@@ -12,16 +12,40 @@ for questions email us at Safa.Jammali@USherbrooke.ca
 
 ### Requirements:
 
--Bio
--Ete toolkit
--Blast+ standalone
--Splign tool
--argparse
 -Python2.7
 -Python3
+-argparse
+-glob
+-numpy
+-multiprocessing
+-functools
+-Bio
+-Ete3
+-scipy
+-skbio
+-Muscle standalone
+-Blast+ standalone
+-Mafft standalone
+-TCoffee standalone
+-Splign standalone
 
+### Usage to compute the spliced alignments for the examples contained in directory examples/input
 
-### Usage to compute pairwise spliced alignments
+####  Command line for simulated gene families contained in examples/input/simulated/
+```
+./launchSimulated.sh
+```
+
+Results are written in directory examples/output/simulated.
+
+#### Command line for real gene families contained in examples/input/real/97/
+```
+./launchReal.sh
+```
+
+Results are written in directory examples/output/real/97.
+
+### Usage to compute pairwise spliced alignments for any gene family
 ```
 usage: src/main.py [-h] [-c CHOICESTRUCTURE] [-pm PAIRWISEMETHOD] [-s STEP]
                [-ce COMPAREEXON] [-sf SOURCEFILE] [-tf TARGETFILE]
@@ -80,8 +104,10 @@ python2.7 src/main.py -ce Yes -s 2  -sf path_to_cds_fasta_file -tf path_to_gene_
 #### Example of command line
 ```
 python3 src/main.py -ce Yes -s 2  -sf examples/input/simulated/small/_iteration_1_initialsource.fasta -tf examples/input/simulated/small/_iteration_1_target.fasta -s2tf examples/input/simulated/small/_iteration_1_initialsource2target.txt -sef examples/input/simulated/small/_iteration_1_initialsourceexonlist.txt -op examples/output/simulated/small/_iteration_1_ -of list
- 
-### Usage to compute multiple spliced alignments using SFAM_tcoffee
+```
+Results are written in directory examples/output/simulated/small with prefix \_iteration_1\_.
+
+### Usage to compute multiple spliced alignments using SFAM_tcoffee for any gene family
 ```
 usage: src_tcoffee/main.py [-h] [-idty IDENTITYTHRESHOLD] [-sf SOURCEFILE]
                [-tf TARGETFILE] [-s2tf SOURCE2TARGETFILE]
@@ -142,6 +168,9 @@ python3 src_tcoffee/main.py -sf path_to_cds_fasta_file -tf path_to_gene_fasta_fi
 #### Example of command line
 ```
 python3 src_tcoffee/main.py -sf examples/input/simulated/small/_iteration_1_initialsource.fasta -tf examples/input/simulated/small/_iteration_1_target.fasta -s2tf examples/input/simulated/small/_iteration_1_initialsource2target.txt -sef examples/input/simulated/small/_iteration_1_initialsourceexonlist.txt -palnf examples/output/simulated/small/_iteration_1_result.txt -psegf examples/output/simulated/small/_iteration_1_segment.txt -op examples/output/simulated/small/_iteration_1_tcoffee_p_ -of list
+```
+
+Results are written in directory examples/output/simulated/small with prefix \_iteration_1_tcoffee_p\_.
 
 ### Computing multiple alignment using SFAM_tcoffee_m: 
 
@@ -154,9 +183,11 @@ python3 src_tcoffee/main.py -sf path_to_cds_fasta_file -tf path_to_gene_fasta_fi
 #### Example of command line
 ```
 python3 src_tcoffee/main.py -sf examples/input/simulated/small/_iteration_1_initialsource.fasta -tf examples/input/simulated/small/_iteration_1_target.fasta -s2tf examples/input/simulated/small/_iteration_1_initialsource2target.txt -sef examples/input/simulated/small/_iteration_1_initialsourceexonlist.txt -palnf examples/output/simulated/small/_iteration_1_result.txt -op examples/output/simulated/small/_iteration_1_tcoffee_m_ -of list
+```
 
+Results are written in directory examples/output/simulated/small with prefix \_iteration_1_tcoffee_m\_.
  
-### Usage to compute multiple spliced alignments using SFAM_mblock
+### Usage to compute multiple spliced alignments using SFAM_mblock  for any gene family
 ```
 usage: src_mblock/main.py [-h] [-idty IDENTITYTHRESHOLD]
                [-sf SOURCEFILE] [-tf TARGETFILE] [-s2tf SOURCE2TARGETFILE]
@@ -206,3 +237,7 @@ python3 src_mblock/main.py -sf path_to_cds_fasta_file -tf path_to_gene_fasta_fil
 #### Example of command line
 ```
 python3 src_mblock/main.py -sf examples/input/simulated/small/_iteration_1_initialsource.fasta -tf examples/input/simulated/small/_iteration_1_target.fasta -s2tf examples/input/simulated/small/_iteration_1_initialsource2target.txt -sef examples/input/simulated/small/_iteration_1_initialsourceexonlist.txt -palnf examples/output/simulated/small/_iteration_1_result.txt -op examples/output/simulated/small/_iteration_1_mblock_ -of list
+```
+
+Results are written in directory examples/output/simulated/small with prefix \_iteration_1_mblock\_.
+

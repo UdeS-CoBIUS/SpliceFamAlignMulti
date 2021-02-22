@@ -20,7 +20,9 @@ def compute_multi_ortholog(cdsexon,alnfilename, orthofilename):
                 seqid = tab[0]
                 for k in range(1,len(tab)-1):
                     seqid += ":"+tab[k]
-                seqpos = [int(x) for x in tab[-1].split("-")]
+                seqpos = [0,0]
+                if(len(tab[-1].split("-"))==2):
+                    seqpos = [int(x) for x in tab[-1].split("-")]
                 if(seqpos != [0,0]):
                     mblocklist[-1][seqid] = seqpos
                 #if("T0" in seqid):
