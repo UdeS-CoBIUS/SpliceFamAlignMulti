@@ -26,7 +26,7 @@ cds0_pabe:198-417
 
 >2
 ppan:0-0
-pabe:856-1012
+pabe:0-0
 hsap:0-0
 ggor:0-0
 ptro:433-589
@@ -35,11 +35,11 @@ cds1_ppan:0-0
 cds0_ptro:198-354
 cds0_hsap:0-0
 cds0_ggor:0-0
-cds0_pabe:417-573
+cds0_pabe:0-0
 
 >3
 ppan:321-477
-pabe:0-0
+pabe:856-1012
 hsap:485-641
 ggor:913-1069
 ptro:902-1058
@@ -48,7 +48,7 @@ cds1_ppan:198-354
 cds0_ptro:0-0
 cds0_hsap:0-0
 cds0_ggor:0-0
-cds0_pabe:0-0
+cds0_pabe:417-573
 
 >4
 ppan:899-1115
