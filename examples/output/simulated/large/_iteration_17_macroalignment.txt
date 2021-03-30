@@ -33,7 +33,7 @@ cds0_pabe:195-408
 cds1_pabe:195-408
 
 >2
-ppan:0-0
+ppan:439-670
 pabe:0-0
 hsap:0-0
 ggor:886-1117
@@ -50,7 +50,7 @@ cds0_pabe:0-0
 cds1_pabe:0-0
 
 >3
-ppan:439-670
+ppan:0-0
 pabe:1328-1559
 hsap:1121-1352
 ggor:1235-1466

@@ -1,14 +1,14 @@
 >0
 ppan:0-183
-pabe:0-0
+pabe:466-649
 hsap:0-0
 ggor:0-0
-ptro:0-0
+ptro:0-183
 cds0_ppan:0-183
 cds1_ppan:0-183
 cds2_ppan:0-183
-cds0_ptro:0-0
-cds1_ptro:0-0
+cds0_ptro:0-183
+cds1_ptro:0-183
 cds0_hsap:0-0
 cds1_hsap:0-0
 cds2_hsap:0-0
@@ -18,15 +18,15 @@ cds0_pabe:0-0
 
 >1
 ppan:302-485
-pabe:466-649
+pabe:0-0
 hsap:0-183
 ggor:0-0
-ptro:0-183
+ptro:0-0
 cds0_ppan:0-0
 cds1_ppan:0-0
 cds2_ppan:0-0
-cds0_ptro:0-183
-cds1_ptro:0-183
+cds0_ptro:0-0
+cds1_ptro:0-0
 cds0_hsap:0-183
 cds1_hsap:0-183
 cds2_hsap:0-0
@@ -71,11 +71,47 @@ cds1_ggor:201-396
 cds0_pabe:201-396
 
 >4
+ppan:0-0
+pabe:0-0
+hsap:1361-1574
+ggor:0-0
+ptro:0-0
+cds0_ppan:0-0
+cds1_ppan:0-0
+cds2_ppan:0-0
+cds0_ptro:0-0
+cds1_ptro:0-0
+cds0_hsap:579-792
+cds1_hsap:579-792
+cds2_hsap:201-414
+cds0_ggor:0-0
+cds1_ggor:0-0
+cds0_pabe:0-0
+
+>5
+ppan:0-0
+pabe:0-0
+hsap:2181-2394
+ggor:806-1019
+ptro:1028-1241
+cds0_ppan:0-0
+cds1_ppan:0-0
+cds2_ppan:0-0
+cds0_ptro:384-597
+cds1_ptro:579-792
+cds0_hsap:0-0
+cds1_hsap:0-0
+cds2_hsap:0-0
+cds0_ggor:201-414
+cds1_ggor:0-0
+cds0_pabe:0-0
+
+>6
 ppan:1622-1835
 pabe:0-0
 hsap:0-0
 ggor:0-0
-ptro:0-0
+ptro:1477-1690
 cds0_ppan:579-792
 cds1_ppan:579-792
 cds2_ppan:384-597
@@ -88,25 +124,7 @@ cds0_ggor:0-0
 cds1_ggor:0-0
 cds0_pabe:0-0
 
->5
-ppan:2035-2248
-pabe:0-0
-hsap:1361-1574
-ggor:806-1019
-ptro:1028-1241
-cds0_ppan:0-0
-cds1_ppan:0-0
-cds2_ppan:0-0
-cds0_ptro:384-597
-cds1_ptro:579-792
-cds0_hsap:579-792
-cds1_hsap:579-792
-cds2_hsap:201-414
-cds0_ggor:201-414
-cds1_ggor:0-0
-cds0_pabe:0-0
-
->6
+>7
 ppan:0-0
 pabe:0-0
 hsap:2655-2859
@@ -124,7 +142,7 @@ cds0_ggor:0-0
 cds1_ggor:0-0
 cds0_pabe:0-0
 
->7
+>8
 ppan:2326-2530
 pabe:1734-1938
 hsap:3129-3333
@@ -142,7 +160,7 @@ cds0_ggor:414-618
 cds1_ggor:0-0
 cds0_pabe:0-0
 
->8
+>9
 ppan:0-0
 pabe:0-0
 hsap:0-0
@@ -160,7 +178,7 @@ cds0_ggor:618-798
 cds1_ggor:396-576
 cds0_pabe:0-0
 
->9
+>10
 ppan:2717-2897
 pabe:2153-2333
 hsap:3615-3795
@@ -178,7 +196,7 @@ cds0_ggor:0-0
 cds1_ggor:0-0
 cds0_pabe:396-576
 
->10
+>11
 ppan:3158-3359
 pabe:2691-2892
 hsap:4153-4354

@@ -56,33 +56,19 @@ cds1_pabe:588-822
 
 >4
 ppan:1935-2160
-pabe:0-0
+pabe:1650-1875
 hsap:1118-1343
 ggor:0-0
-ptro:0-0
+ptro:2194-2419
 cds0_ppan:417-642
 cds1_ppan:639-864
-cds0_ptro:0-0
-cds0_hsap:0-0
-cds0_ggor:0-0
-cds0_pabe:0-0
-cds1_pabe:0-0
-
->5
-ppan:0-0
-pabe:1650-1875
-hsap:1562-1787
-ggor:0-0
-ptro:2194-2419
-cds0_ppan:0-0
-cds1_ppan:0-0
 cds0_ptro:417-642
 cds0_hsap:0-0
 cds0_ggor:0-0
 cds0_pabe:639-864
 cds1_pabe:822-1047
 
->6
+>5
 ppan:2537-2708
 pabe:2019-2190
 hsap:1930-2101

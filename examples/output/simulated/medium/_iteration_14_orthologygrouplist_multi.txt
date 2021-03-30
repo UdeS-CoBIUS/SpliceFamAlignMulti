@@ -2,9 +2,6 @@
 cds0_ppan
 cds2_ppan
 cds3_ppan
-cds0_ptro
-cds1_ptro
-cds3_ptro
 
 >1
 cds1_ppan
@@ -16,4 +13,9 @@ cds2_ptro
 >2
 cds0_hsap
 cds1_hsap
+
+>3
+cds0_ptro
+cds1_ptro
+cds3_ptro
 
