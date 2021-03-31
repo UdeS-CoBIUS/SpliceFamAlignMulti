@@ -9,8 +9,6 @@ cds1_ptro
 >1
 cds0_pabe
 cds1_pabe
-
->2
 cds0_ggor
 cds1_ggor
 

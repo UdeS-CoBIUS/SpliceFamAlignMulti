@@ -2,23 +2,21 @@
 cds0_ppan
 cds2_ppan
 cds3_ppan
-cds0_pabe
-cds1_pabe
 cds1_hsap
 cds2_ggor
+cds1_ptro
+cds2_ptro
 
 >1
 cds1_ppan
 cds0_hsap
 cds0_ggor
-
->2
-cds1_ggor
-
->3
 cds0_ptro
 
->4
-cds1_ptro
-cds2_ptro
+>2
+cds0_pabe
+cds1_pabe
+
+>3
+cds1_ggor
 

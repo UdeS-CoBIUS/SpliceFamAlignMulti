@@ -6,18 +6,16 @@ cds1_ppan
 
 >2
 cds0_pabe
+cds0_ggor
 
 >3
 cds0_hsap
 cds1_hsap
 
 >4
-cds0_ggor
-
->5
 cds0_ptro
 cds2_ptro
 
->6
+>5
 cds1_ptro
 

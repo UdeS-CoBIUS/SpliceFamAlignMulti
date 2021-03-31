@@ -38,15 +38,28 @@ cds0_ggor:0-0
 cds0_pabe:0-0
 
 >3
+ppan:0-0
+pabe:0-0
+hsap:0-0
+ggor:731-929
+ptro:0-0
+cds0_ppan:0-0
+cds0_ptro:0-0
+cds0_hsap:0-0
+cds1_hsap:0-0
+cds0_ggor:414-612
+cds0_pabe:0-0
+
+>4
 ppan:1539-1737
 pabe:1112-1310
 hsap:621-819
-ggor:731-929
+ggor:1073-1271
 ptro:1172-1370
 cds0_ppan:414-612
 cds0_ptro:414-612
 cds0_hsap:414-612
 cds1_hsap:414-612
-cds0_ggor:414-612
+cds0_ggor:0-0
 cds0_pabe:414-612
 

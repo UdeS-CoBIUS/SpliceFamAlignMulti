@@ -12,7 +12,6 @@ Predicted_Protein_Group1_cds1_ppan_to_ggor
 
 >2
 cds0_ggor
-cds0_pabe
 Predicted_Protein_Group2_cds0_ggor_to_ppan
 Predicted_Protein_Group2_cds0_ggor_to_hsap
 
