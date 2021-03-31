@@ -60,7 +60,7 @@ cds0_pabe:222-363
 
 >3
 ppan:1882-2125
-pabe:0-0
+pabe:2245-2488
 hsap:0-0
 ggor:0-0
 ptro:0-0
@@ -80,7 +80,7 @@ cds0_pabe:0-0
 
 >4
 ppan:2284-2527
-pabe:2245-2488
+pabe:0-0
 hsap:2441-2684
 ggor:0-0
 ptro:2064-2307
@@ -100,7 +100,7 @@ cds0_pabe:0-0
 
 >5
 ppan:0-0
-pabe:0-0
+pabe:2731-2893
 hsap:2898-3060
 ggor:0-0
 ptro:0-0
@@ -116,11 +116,11 @@ cds0_hsap:606-768
 cds1_hsap:606-768
 cds0_ggor:0-0
 cds1_ggor:0-0
-cds0_pabe:0-0
+cds0_pabe:363-525
 
 >6
 ppan:2774-2936
-pabe:2731-2893
+pabe:0-0
 hsap:3211-3373
 ggor:2483-2645
 ptro:2403-2565
@@ -136,5 +136,5 @@ cds0_hsap:0-0
 cds1_hsap:0-0
 cds0_ggor:363-525
 cds1_ggor:363-525
-cds0_pabe:363-525
+cds0_pabe:0-0
 

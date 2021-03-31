@@ -90,11 +90,26 @@ cds1_pabe:657-852
 
 >6
 ppan:2529-2751
+pabe:0-0
+hsap:0-0
+ggor:0-0
+ptro:0-0
+cds0_ppan:852-1074
+cds0_ptro:0-0
+cds1_ptro:0-0
+cds0_hsap:0-0
+cds1_hsap:0-0
+cds0_ggor:0-0
+cds0_pabe:0-0
+cds1_pabe:0-0
+
+>7
+ppan:2901-3123
 pabe:2921-3143
 hsap:2420-2642
 ggor:2440-2662
 ptro:2490-2712
-cds0_ppan:852-1074
+cds0_ppan:0-0
 cds0_ptro:618-840
 cds1_ptro:852-1074
 cds0_hsap:651-873

@@ -74,7 +74,7 @@ cds1_hsap:0-0
 cds0_pabe:393-558
 
 >5
-ppan:1590-1755
+ppan:0-0
 pabe:0-0
 hsap:891-1056
 ggor:0-0

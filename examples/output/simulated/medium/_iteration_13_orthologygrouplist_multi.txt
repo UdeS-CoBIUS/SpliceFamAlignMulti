@@ -13,7 +13,6 @@ cds0_pabe
 
 >4
 cds0_hsap
-cds0_ggor
 
 >5
 cds1_hsap
@@ -22,13 +21,16 @@ cds1_hsap
 cds2_hsap
 
 >7
-cds1_ggor
+cds0_ggor
 
 >8
+cds1_ggor
+
+>9
 cds0_ptro
 cds1_ptro
 
->9
+>10
 cds2_ptro
 cds3_ptro
 

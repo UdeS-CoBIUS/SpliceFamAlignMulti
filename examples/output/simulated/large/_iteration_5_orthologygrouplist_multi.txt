@@ -7,8 +7,5 @@ cds1_ppan
 cds0_hsap
 
 >2
-cds0_pabe
-
->3
 cds0_ggor
 

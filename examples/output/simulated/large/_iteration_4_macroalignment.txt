@@ -47,38 +47,22 @@ cds2_ggor:0-0
 cds0_pabe:0-0
 
 >3
-ppan:0-0
-pabe:0-0
-hsap:1311-1560
-ggor:0-0
-ptro:0-0
-cds0_ppan:0-0
-cds1_ppan:0-0
-cds0_hsap:192-441
-cds1_hsap:192-441
-cds2_hsap:192-441
-cds0_ggor:0-0
-cds1_ggor:0-0
-cds2_ggor:0-0
-cds0_pabe:0-0
-
->4
 ppan:1619-1868
 pabe:1613-1862
-hsap:1857-2106
+hsap:1311-1560
 ggor:718-967
 ptro:0-0
 cds0_ppan:444-693
 cds1_ppan:663-912
-cds0_hsap:0-0
-cds1_hsap:0-0
-cds2_hsap:0-0
+cds0_hsap:192-441
+cds1_hsap:192-441
+cds2_hsap:192-441
 cds0_ggor:192-441
 cds1_ggor:192-441
 cds2_ggor:0-0
 cds0_pabe:0-0
 
->5
+>4
 ppan:2039-2258
 pabe:2056-2275
 hsap:2217-2436
@@ -94,7 +78,7 @@ cds1_ggor:441-660
 cds2_ggor:444-663
 cds0_pabe:444-663
 
->6
+>5
 ppan:0-0
 pabe:2524-2764
 hsap:0-0
@@ -110,7 +94,7 @@ cds1_ggor:0-0
 cds2_ggor:0-0
 cds0_pabe:663-903
 
->7
+>6
 ppan:2445-2685
 pabe:2935-3175
 hsap:2537-2777
