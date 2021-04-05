@@ -756,8 +756,8 @@ def merge_overlapping(mblocklist,graphid2ensemblid,ensemblid2graphid,gene2cds,cd
                                 if(ensemblid2graphid[id_] in mblocklist[j].keys()):
                                     mblocklist[j].pop(ensemblid2graphid[id_])
                         if(not keepi):
-                            if(gid in  mblocklist[min].keys()):
-                                mblocklist[min].pop(gid)
+                            if(gid in  mblocklist[i].keys()):
+                                mblocklist[i].pop(gid)
                             for id_ in gene2cds[graphid2ensemblid[gid]]:
                                 if(ensemblid2graphid[id_] in mblocklist[i].keys()):
                                     mblocklist[i].pop(ensemblid2graphid[id_])
