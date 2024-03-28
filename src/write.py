@@ -27,6 +27,9 @@ from fse import fse
 import translator
 from translator import aamap
 
+BORDER_LENGTH = 80
+LENGTH_ALN_LINE = 80
+
 #############################
 ##  INPUT FILE WRITTING #####
 ############################
@@ -394,6 +397,11 @@ def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,ou
         aln_srspair = format_alignment(sequence1,sequence2)
 
         string_to_print +=  aln_srspair
+    if(outputformat == "listaln"):
+        #string_to_print+=string(segment_matches)+"\n"
+        #print segment_matches
+        for match in segment_matches:
+             string_to_print +=cdsid + "\t" + geneid + "\t" + str(match[2]) + "\t" + str(match[1]) + "\t" + str(match[1]+match[2]) + "\t" + str(match[0]) +  "\t" + str(match[0]+match[2]) + "\t" + str(match[3]) +  "\n"
         
     return string_to_print, segment_matches
   
