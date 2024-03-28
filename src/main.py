@@ -13,10 +13,10 @@ This module is the main module that
 
 Command line: 
 If a splicing structure file is not given in input:
-python 'pathto main.py'  -sf 'path to cds fasta file'  -tf 'path to gene fasta file' -s2tf 'path to association cds-gene file'  -op 'output path' -of 'list or aln: display alignments as lists of blocks or detailed alignments'  -f 'Yes or No: if the method goes until the SFA_G step or not' -c 'blast or splign: method used to infer splicing structure when a splicing structure file is not given'
+python 'pathto main.py'  -sf 'path to cds fasta file'  -tf 'path to gene fasta file' -s2tf 'path to association cds-gene file'  -op 'output path' -of 'list or aln or listaln: display alignments as lists of blocks or detailed alignments or detailed ungapped alignments'  -f 'Yes or No: if the method goes until the SFA_G step or not' -c 'blast or splign: method used to infer splicing structure when a splicing structure file is not given'
 
 If a splicing structure file is given in input:
-python 'pathto main.py'  -sf 'path to cds fasta file'  -tf 'path to gene fasta file' -s2tf 'path to association cds-gene file' -sef 'splicing structure file' -op 'output path' -of 'list or aln: display alignments as lists of blocks or detailed alignments -f 'Yes or No: if the method goes until the SFA_G step or not'
+python 'pathto main.py'  -sf 'path to cds fasta file'  -tf 'path to gene fasta file' -s2tf 'path to association cds-gene file' -sef 'splicing structure file' -op 'output path' -of 'list or aln or listaln: display alignments as lists of blocks or detailed alignments or detailed ungapped alignments -f 'Yes or No: if the method goes until the SFA_G step or not'
  
 
 moduleauthor:: Safa Jammali, Jean-David Aguilar and Aïda Ouangraoua 
@@ -74,7 +74,7 @@ def build_arg_parser():
             
     parser.add_argument('-op', '--outputPrefix', help="Output prefix (required)")
 
-    parser.add_argument('-of', '--outputFormat', help="Output format : list or aln (required)")
+    parser.add_argument('-of', '--outputFormat', help="Output format : list or aln or listaln (required)")
 
     parser.add_argument('-oa', '--outputAlignment', help="Output alignment : method used to compute pairwise block alignment: zs or fsepsa", default = "zs")
     return parser
@@ -122,7 +122,7 @@ def main():
         print "Argument -op <outputprefix> is required"
 
     if (outputFormat == None):
-        print "Argument -of <outputformat> is required : list or aln"
+        print "Argument -of <outputformat> is required : list or aln or listaln"
 
     if(outputPrefix != None and outputFormat != None):
         print "Retrieving input data..."
