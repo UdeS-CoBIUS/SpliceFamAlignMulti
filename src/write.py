@@ -388,7 +388,8 @@ def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,ou
 
     segment_matches = compute_segment_matches(sequence1, sequence2, block_ss, block_qs, block_identity)
     
-    string_to_print = cdsid + "\t" + geneid + "\t" + str(aln_length) + "\t" + str(block_qs) + "\t" + str(block_qe) + "\t" + str(block_ss) +  "\t" + str(block_se) + "\t" + str(block_identity) +  "\t" + gene[block_ss-2:block_ss] + "<Exon>" + gene[block_se:block_se+2] + "\n"
+    if(outputformat == "list" or outputformat == "aln"):
+        string_to_print = cdsid + "\t" + geneid + "\t" + str(aln_length) + "\t" + str(block_qs) + "\t" + str(block_qe) + "\t" + str(block_ss) +  "\t" + str(block_se) + "\t" + str(block_identity) +  "\t" + gene[block_ss-2:block_ss] + "<Exon>" + gene[block_se:block_se+2] + "\n"
     
     if(outputformat == "aln"):
         sequence1 = gene[block_ss-BORDER_LENGTH:block_ss] + sequence1 + gene[block_se:block_se+BORDER_LENGTH]
