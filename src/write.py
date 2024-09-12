@@ -85,6 +85,7 @@ def writeOutfile(outputprefix,outputformat,outputalignment,extendedsourcedata,ta
     extendedsource2targetfile.close()
 
     datalist = []
+    cdsexon = {}
     j= 0
     for gene in targetdata:
         geneid,geneseq = gene
@@ -93,7 +94,12 @@ def writeOutfile(outputprefix,outputformat,outputalignment,extendedsourcedata,ta
             cdsid,cdsseq,cdsgeneid ,null = cds
             status, blocklist,splicing_sites,ttargetcds, texisting = comparisonresults[j][i]
             datalist.append([cdsid,geneid,cdsseq, cdsgeneid, geneseq, blocklist, status])
+            if(geneid==cdsgeneid):
+                cdsexon[cdsid]=blocklist
         j += 1
+    for i in range(len(datalist)):
+        datalist[i].append(cdsexon[datalist[i][0]])
+            
 
     p = Pool(multiprocessing.cpu_count())
     pool_results = p.map(partial(pool_print_blocklist, outputformat = outputformat, outputalignment = outputalignment), datalist)
@@ -147,14 +153,14 @@ def writeOutfile(outputprefix,outputformat,outputalignment,extendedsourcedata,ta
         orthologygrouplistfile.close()
 
 def pool_print_blocklist(data, outputformat, outputalignment):
-    cdsid,geneid,cdsseq, cdsgeneid,geneseq, blocklist, status = data
+    cdsid,geneid,cdsseq, cdsgeneid,geneseq, blocklist, status, cdsexon = data
     string_result_buffer = ""
     string_cdsexonendlist_buffer = ""
     segment_matches = []
     
     cdslength = len(cdsseq)
     string_result_buffer += cdsid + "\t" + geneid + "\t" + str(cdslength)  + "\t" + str("%.2f" % cover_percentage(blocklist,cdslength)) + "\t" + str(status)  + "\n"
-    string_res, segments = print_blocklist(cdsid,cdsgeneid,geneid,cdsseq, geneseq, blocklist, outputformat, outputalignment)
+    string_res, segments = print_blocklist(cdsid,cdsgeneid,geneid,cdsseq, geneseq, blocklist, outputformat, outputalignment,cdsexon)
     string_result_buffer += string_res
     segment_matches += segments
     
@@ -164,7 +170,7 @@ def pool_print_blocklist(data, outputformat, outputalignment):
 
 
 
-def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,outputalignment):
+def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,outputalignment,cdsexon):
     """
     This function is the main function of the graphic 
     representation of the prédiction.
@@ -179,6 +185,7 @@ def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,o
     blocklist:
     outfile: 
     outputformat:
+    cdsexon:
         
 
     Returns
@@ -201,7 +208,7 @@ def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,o
         
         for i in range(len(blocklist)-1):
             block = blocklist[i]
-            string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, block, outputformat,outputalignment)
+            string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, block, outputformat,outputalignment,cdsexon)
             string_buffer += string_to_print
             segment_matches += segments
 
@@ -213,7 +220,7 @@ def print_blocklist(cdsid, cdsgeneid,geneid, cds, gene, blocklist,outputformat,o
                 string_buffer += string_to_print
 
         last_block = blocklist[-1]
-        string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, last_block, outputformat,outputalignment)
+        string_to_print,segments = compute_aln_string(cdsid, cdsgeneid, geneid, cds, gene, last_block, outputformat,outputalignment,cdsexon)
         string_buffer += string_to_print
         segment_matches += segments
 
@@ -317,7 +324,7 @@ def print_wholealignment(cdsid, geneid, cds, gene, blocklist,outfile, outputform
     outfile.write(cds_+"\n")
 
           
-def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,outputalignment):
+def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,outputalignment,cdsexon):
     """
     This function produce the visual representation for each aligned block using a global alignment
      
@@ -330,6 +337,7 @@ def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,ou
     cds: 
     gene:
     block:
+    cdsexon:
      
     outputformat:
         
@@ -387,6 +395,8 @@ def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,ou
         assert(block_identity == "1.00")
 
     segment_matches = compute_segment_matches(sequence1, sequence2, block_ss, block_qs, block_identity)
+
+    segment_matches = cut_segment_matches(segment_matches,cdsexon)
     
     if(outputformat == "list" or outputformat == "aln"):
         string_to_print = cdsid + "\t" + geneid + "\t" + str(aln_length) + "\t" + str(block_qs) + "\t" + str(block_qe) + "\t" + str(block_ss) +  "\t" + str(block_se) + "\t" + str(block_identity) +  "\t" + gene[block_ss-2:block_ss] + "<Exon>" + gene[block_se:block_se+2] + "\n"
@@ -402,9 +412,31 @@ def compute_aln_string(cdsid, cdsgeneid,geneid, cds, gene,block, outputformat,ou
         #string_to_print+=string(segment_matches)+"\n"
         #print segment_matches
         for match in segment_matches:
-             string_to_print +=cdsid + "\t" + geneid + "\t" + str(match[2]) + "\t" + str(match[1]) + "\t" + str(match[1]+match[2]) + "\t" + str(match[0]) +  "\t" + str(match[0]+match[2]) + "\t" + str(match[3]) +  "\n"
+            genestart,cdsstart,length,pid = match
+            string_to_print +=cdsid + "\t" + geneid + "\t" + str(length) + "\t" + str(cdsstart) + "\t" + str(cdsstart+length) + "\t" + str(genestart) +  "\t" + str(genestart+length) + "\t" + str(pid) +  "\n"
+                    
+            #string_to_print +=cdsid + "\t" + geneid + "\t" + str(length) + "\t" + str(cdsstart) + "\t" + str(cdsstart+length) + "\t" + str(genestart) +  "\t" + str(genestart+length) + "\t" + str(pid) +  "\n"
         
     return string_to_print, segment_matches
+
+def cut_segment_matches(segment_matches,cdsexon):
+    segment_matches_ = []
+    for match in segment_matches:
+        genestart,cdsstart,length,pid = match
+        cut=[cdsstart]
+        for exon in cdsexon:
+            if (cdsstart < exon[0] and exon[0] < cdsstart+length):
+                cut.append(exon[0])
+        cut.append(cdsstart+length)
+        if(len(cut)>2):
+            print(cut)
+        for i in range(1,len(cut)):
+            cstart = cut[i-1]
+            clength = cut[i]-cut[i-1]
+            diffstart=cstart-cdsstart
+            segment_matches_.append([genestart+diffstart,cstart,clength,pid])
+    return segment_matches_
+                
   
 def compute_unaln_string(cdsid, geneid, cds, gene,interval, outputformat):
     """
