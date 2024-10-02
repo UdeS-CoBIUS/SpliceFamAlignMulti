@@ -275,7 +275,11 @@ def compute_tree(extendedsourcedata,targetdata,comparisonresults,comparisonresul
     
     return tree
 
-def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,outputprefix,msamethod):
+#############################
+##  OUTPUT FILE WRITTING #####
+############################
+
+def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,outputprefix):
     
     macroalignment_buffer = ""
 
@@ -320,11 +324,11 @@ def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,
     for i in range(len(mblocklist)):
         mblocklistnum.append([i, mblocklist[i]])
     p = Pool(multiprocessing.cpu_count())
-    results = p.map(partial(pool_write_microalignment,targetdata=targetdata,extendedsourcedata=extendedsourcedata,nbinitialsource=nbinitialsource,all_ids=all_ids,msamethod=msamethod), mblocklistnum)
+    results = p.map(partial(pool_write_microalignment,targetdata=targetdata,extendedsourcedata=extendedsourcedata,nbinitialsource=nbinitialsource,all_ids=all_ids,outputprefix=outputprefix), mblocklistnum)
 
     #results = []
     #for mblocknum in mblocklistnum:
-        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids))
+        #results.append(pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,outputprefix))
         
     for id in all_ids:
         aln[id] = ""
@@ -341,60 +345,34 @@ def write_output_files(extendedsourcedata,targetdata,nbinitialsource,mblocklist,
     microalignmentfile.close()
 
 
-def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,msamethod):
+def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitialsource,all_ids,outputprefix):
     aln = {}
     i = mblocknum[0]
     mblock = mblocknum[1]
-    input_muscle_file = "input_muscle.fasta"+str(i)
-    output_muscle_file = "output_muscle.fasta"+str(i)
-        
-    input_muscle = open(input_muscle_file,"w")
 
-    nbseq = 0
+    present_ids = []
+    length = 0
     for gene in targetdata:
         geneid,geneseq = gene
         if geneid in mblock.keys() and mblock[geneid][1] > mblock[geneid][0]:
-            input_muscle.write(">"+geneid + "\n" + geneseq[mblock[geneid][0]:mblock[geneid][1]]+"\n")
-            nbseq += 1
+            present_ids.append(geneid)
+            aln[geneid] = geneseq[mblock[geneid][0]:mblock[geneid][1]]
+            length = len(aln[geneid])
 
     for j in range(nbinitialsource):
         cds = extendedsourcedata[j]
         cdsid,cdsseq,cdsgeneid,null = cds
         if cdsid in mblock.keys() and mblock[cdsid][1] > mblock[cdsid][0]:
-            input_muscle.write(">"+cdsid + "\n" + cdsseq[mblock[cdsid][0]:mblock[cdsid][1]]+"\n")
-            nbseq += 1
-                
-    input_muscle.close()
-
-    msa = []
-    if(nbseq > 0):
-        if(msamethod == "muscle"):
-            muscle_cline = MuscleCommandline(input=input_muscle_file, out=output_muscle_file, gapopen=-800.0)
-            stdout, stderr = muscle_cline()
-        else:# msamethod == "mafft"
-            mafft_cline = MafftCommandline(input=input_muscle_file)
-            stdout, stderr = mafft_cline()
-            with open(output_muscle_file, "w") as handle:
-                handle.write(stdout)            
-        msa = AlignIO.read(output_muscle_file, "fasta")
-    else:
-        open(output_muscle_file,"w").close()
-
-        
-    present_ids = []
-    length = 0
-    for record in msa:
-        present_ids.append(record.id)
-        aln[record.id] = record.seq
-        length = len(record.seq)
+            present_ids.append(cdsid)
+            aln[cdsid] = cdsseq[mblock[cdsid][0]:mblock[cdsid][1]]
+            length = len(cdsseq[mblock[cdsid][0]:mblock[cdsid][1]])
 
     for id in all_ids:
         if(id not in present_ids):
             aln[id] = '-'*length
 
-    os.remove(input_muscle_file)
-    os.remove(output_muscle_file)
     return aln
+
 
 #####################
 ### Main ############
@@ -413,7 +391,7 @@ def build_arg_parser():
 
     parser.add_argument('-op', '--outputPrefix', help="Output prefix (required)")
 
-    parser.add_argument('-msa', '--msaMethod', help="Multiple sequence aligner: muscle or mafft")
+    parser.add_argument('-pscore', '--pairwiseScore', help="Pairwise Score: unit or idty")
     
     return parser
 
@@ -451,14 +429,14 @@ def main():
             tree = compute_tree(sourcedata,targetdata,comparisonresults,comparisonresults_idty,nbinitialsource)
 
         
-        mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,args.msaMethod,tree,outputprefix)
+        mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,args.pairwiseScore,tree,outputprefix)
         
         # print(time.time()-temps)#, "\n" ,len(mblocklist), "final mblocks\n")
 
 
         # temps=time.time()
         # print("Writting output files...")
-        write_output_files(sourcedata,targetdata, nbinitialsource,mblocklist,outputprefix,args.msaMethod)
+        write_output_files(sourcedata,targetdata, nbinitialsource,mblocklist,outputprefix)
         # print(time.time()-temps)#, "\n" , "write completed\n")
         
         # temps=time.time()

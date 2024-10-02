@@ -183,7 +183,7 @@ def refine_segment_matches_matrix(segment_matches_matrix,genevertices):
 
     return segment_matches_matrix_
 
-def compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matrix):
+def compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matrix,pscore):
     pairwise_score_matrix = []
     pairwise_score_matrix_ = []
     for i in range(len(genevertices)):
@@ -211,8 +211,13 @@ def compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matr
         for j in range(i,len(genevertices)):
             for match in segment_matches_matrix[i][j]:
                 start1,start2,length,idty= match
-                pairwise_score_matrix[i][j][genevertices2index[i][start1]][genevertices2index[j][start2]] = idty
-                pairwise_score_matrix_[i][j][genevertices2index[i][start1]][genevertices2index[j][start2]] = idty
+                sc =  0
+                if(pscore == "unit"):
+                    sc = 1
+                else: #pscore == "idty"
+                    sc = idty
+                pairwise_score_matrix[i][j][genevertices2index[i][start1]][genevertices2index[j][start2]] = sc
+                pairwise_score_matrix_[i][j][genevertices2index[i][start1]][genevertices2index[j][start2]] = sc
                 geneverticesimage[i][genevertices2index[i][start1]].append((j,genevertices2index[j][start2]))
                 geneverticesimage[j][genevertices2index[j][start2]].append((i,genevertices2index[i][start1]))
     
@@ -239,8 +244,13 @@ def compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matr
                             else:
                                 scorej = pairwise_score_matrix[geneidx][j][startidx][l]
                             
-                            pairwise_score_matrix_[i][j][k][l] += max(scorei,scorej)
-    
+                           
+                            if(pscore == "unit"):
+                                pairwise_score_matrix_[i][j][k][l] += 1
+                            else:# pscore == "idty"
+                                 pairwise_score_matrix_[i][j][k][l] += max(scorei,scorej)
+                                
+                                
     return pairwise_score_matrix_
 
  
@@ -303,8 +313,10 @@ def align(columnlistleft,columnlistright,pairwise_score_matrix):
         dele = aln_matrix[i-1][j]
         inse =  aln_matrix[i][j-1]
         if(aln_matrix[i][j] == inse):
+            columnlist = [columnlistright[j]] + columnlist
             j -=1
         elif(aln_matrix[i][j] == dele):
+            columnlist = [columnlistleft[i]] + columnlist
             i -= 1
         else:
             columnlist = [columnlistleft[i]+columnlistright[j]] + columnlist
@@ -337,6 +349,30 @@ def column2mblocklist(columnlist,gene_list,genevertices):
         mblocklist.append(mblock)
     return mblocklist
 
+def addsource2mblocklist(mblocklist,gene_list,gene2cds,cdsexon,cds2geneexon):
+    mblocklist_ = []
+    currentcdsexonidx = {}
+    for geneid in gene_list:
+        for cdsid in gene2cds[geneid]:
+             currentcdsexonidx[cdsid] = 0
+    for i in range(len(mblocklist)):
+        mblock = {}
+        nbgenes = len(mblocklist[i].keys())
+        for geneid in mblocklist[i].keys():
+            mblock[geneid] = mblocklist[i][geneid]
+            genesegment = mblocklist[i][geneid]
+            for cdsid in gene2cds[geneid]:
+                if(currentcdsexonidx[cdsid] < len(cdsexon[cdsid])):
+                    currentcdsexon = cdsexon[cdsid][currentcdsexonidx[cdsid]]
+                    genecdsexon = cds2geneexon[cdsid][currentcdsexon[0]]
+                    if(genecdsexon[0] <= genesegment[0] and genesegment[1] <= genecdsexon[1]):
+                        mblock[cdsid] = [currentcdsexon[0]+genesegment[0]-genecdsexon[0],currentcdsexon[0]+genesegment[1]-genecdsexon[0]]
+                        if(genesegment[1] == genecdsexon[1]):
+                            currentcdsexonidx[cdsid] += 1
+        if(len(mblock.keys()) > nbgenes):
+            mblocklist_.append(mblock)
+    return mblocklist_
+    
 def mergemblocks(mblocklist):
     i = len(mblocklist)-1
     while(i > 0):
@@ -349,7 +385,7 @@ def mergemblocks(mblocklist):
     return mblocklist
             
 
-def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,msamethod,tree,outputprefix):
+def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,pscore,tree,outputprefix):
 
     geneid2index = compute_geneid2index(targetdata)
     
@@ -363,13 +399,15 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
 
     segment_matches_matrix = refine_segment_matches_matrix(segment_matches_matrix,genevertices)
 
-    pairwise_score_matrix = compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matrix)
+    pairwise_score_matrix = compute_pairwise_scores(genevertices,genevertices2index,segment_matches_matrix, pscore)
 
     t = newick.loads(tree)
 
     columnlist = compute_msa_recursif(pairwise_score_matrix,t[0],geneid2index)
     
     mblocklist = column2mblocklist(columnlist,gene_list,genevertices)
+
+    mblocklist = addsource2mblocklist(mblocklist,gene_list,gene2cds,cdsexon,cds2geneexon)
 
     mblocklist = mergemblocks(mblocklist)
 
