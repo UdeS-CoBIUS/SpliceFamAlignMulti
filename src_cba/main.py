@@ -36,6 +36,10 @@ from Bio import AlignIO
 from skbio import DistanceMatrix
 from skbio.tree import nj
 
+import sys
+sys.path.insert(0, os.path.abspath('src_python3/'))
+from compute_alignments import *
+
 from compare import *
 #from compute_orthology_multi import *
 
@@ -373,7 +377,53 @@ def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitials
 
     return aln
 
+def compute_reducedsource_from_files(sourcedata,targetdata):
+    sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r,geneexon = [],{},{},{},{},{},{}
+    geneid2seq = {}
+    for i in range(len(targetdata)):
+        geneid,geneseq = targetdata[i]
+        geneid2seq[geneid] = geneseq
+        cdsid = geneid+"_r"
+        sourcedata_r.append([cdsid,"",geneid,[]]) 
+        geneexon_r[geneid] = []
+        geneexon[geneid] = []
+        cds2geneid_r[cdsid] = geneid
+        gene2cds_r[geneid] = [cdsid]
+        cdsexon_r[cdsid] = []
 
+    
+    for i in range(len(sourcedata)):
+        cdsid,seq,cdsgeneid,exonlist = sourcedata[i]
+        geneexon[cdsgeneid] += [exon[2:] for exon in exonlist]
+
+    for geneid in geneexon.keys():
+        cdsid = geneid+"_r"
+        geneexon[geneid].sort()
+        for i in range(len(geneexon[geneid])-1):
+            if(geneexon[geneid][i+1][0] <= geneexon[geneid][i][1]):
+                geneexon[geneid][i+1] = [int(minimum(geneexon[geneid][i][0],geneexon[geneid][i+1][0])),int(maximum(geneexon[geneid][i][1],geneexon[geneid][i+1][1]))]
+            else:
+                geneexon_r[geneid].append(geneexon[geneid][i])
+        geneexon_r[geneid].append(geneexon[geneid][-1])
+        
+    for i in range(len(sourcedata_r)):
+        cdsid,seq,cdsgeneid,exonlist = sourcedata_r[i]
+        cstop = 0
+        for j in range(len(geneexon_r[cdsgeneid])):
+            gstart,gstop = geneexon_r[cdsgeneid][j]
+            seq +=  geneid2seq[cdsgeneid][gstart:gstop]
+            cstart = cstop
+            cstop = cstart +(gstop-gstart)
+            exonlist.append([cstart,cstop,gstart,gstop])
+            cdsexon_r[cdsid].append([cstart,cstop])
+        sourcedata_r[i][1] = seq
+        sourcedata_r[i][3] = exonlist
+    
+    return sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r
+
+#def computeResultFiles(sourcedata,targetdata,outputPrefix):
+    
+    
 #####################
 ### Main ############
 
@@ -392,6 +442,8 @@ def build_arg_parser():
     parser.add_argument('-op', '--outputPrefix', help="Output prefix (required)")
 
     parser.add_argument('-pscore', '--pairwiseScore', help="Pairwise Score: unit or idty")
+
+    parser.add_argument('-cpairwise', '--computePairwise', help="Compute Pairwise: yes or no")
     
     return parser
 
@@ -403,47 +455,52 @@ def main():
     idty_threshold = float(args.identityThreshold)
     outputprefix = args.outputPrefix
     pairwisealnfile = args.pairwiseAlnFile
+    computepairwise = args.computePairwise
 
     if (outputprefix == None):
         print("Argument -op <outputPrefix> is required")
         return
             
-    if (pairwisealnfile == None):
-        print("Argument -palnf <pairwiseAlnFile> is required")
+    if (pairwisealnfile == None and computepairwise != "yes"):
+        print("Argument -palnf <pairwiseAlnFile> is required;\n Otherwise Argument -cPairwise must be 'yes'")
         return
 
-    if(outputprefix != None and pairwisealnfile != None):
-        print("Retrieving input data...")
-        sourcedata,targetdata = get_data_from_files(args)
-        nbinitialsource = len(sourcedata)
+    print("Retrieving input data...")
+    sourcedata,targetdata = get_data_from_files(args)
+    nbinitialsource = len(sourcedata)
+    tree = ""
+    if (treefile != None):
+        tree = open(treefile,"r").readline().split("\n")[0]
+    mblocklist = []
 
-        print("Reading pairwise alignment file...")
-        comparisonresults,comparisonresults_idty,geneexon,cdsexon,cds2geneid,cds2geneexon,gene2cds = parseResultFile(pairwisealnfile,sourcedata, idty_threshold)
-        
-        temps=time.time()
-        print("Computing multiple alignement...")
-        tree = ""
-        if (treefile != None):
-            tree = open(treefile,"r").readline().split("\n")[0]
-        else:
-            tree = compute_tree(sourcedata,targetdata,comparisonresults,comparisonresults_idty,nbinitialsource)
+    print("Computing multiple alignement...")
+    if(outputprefix != None):
+        comparisonresults,comparisonresults_idty,geneexon,cdsexon,cds2geneid,cds2geneexon,gene2cds = [],[],{},{},{},{},{}
+        if(pairwisealnfile != None):
+            print("Reading pairwise alignment file...")
+            comparisonresults,comparisonresults_idty,geneexon,cdsexon,cds2geneid,cds2geneexon,gene2cds = parseResultFile(pairwisealnfile,sourcedata, idty_threshold)
+            if(treefile == None):
+                tree = compute_tree(sourcedata,targetdata,comparisonresults,comparisonresults_idty,nbinitialsource)
+
+            mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,args.pairwiseScore,tree,outputprefix)
+            
+        elif(computepairwise == "yes" and args.source2TargetFile != None and args.sourceExonFile != None):
+            sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r = compute_reducedsource_from_files(sourcedata,targetdata)
+            nbinitialsource_r = len(sourcedata_r)
+            print(sourcedata_r, geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r)
+            comparisonResults = spliceAlignment(sourcedata_r, targetdata, 2, 'Yes', 'splign', 'sfa', outputprefix)
+            print(comparisonResults)
+
+            #comparisonResults = spliceAlignment(sourceData, targetData, step, compareExon, choice, pairwiseMethod, outputPrefix)
+            #comparisonresults_,comparisonresults_idty_r = computeResultFiles(sourcedata_r,targetdata,outputPrefix)
+            #if(treefile == None):
+            #    tree = compute_tree(sourcedata_r,targetdata,comparisonresults_,comparisonresults_idty_r,nbinitialsource_r)
+
+            mblocklist = compute_msa(sourcedata_r,targetdata,comparisonresults_r,comparisonresults_idty_r,geneexon_r,cdsexon_r,nbinitialsource_r,cds2geneid_r,cds2geneexon_r,gene2cds_r,args.pairwiseScore,tree,outputprefix)
 
         
-        mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,args.pairwiseScore,tree,outputprefix)
         
-        # print(time.time()-temps)#, "\n" ,len(mblocklist), "final mblocks\n")
-
-
-        # temps=time.time()
-        # print("Writting output files...")
-        write_output_files(sourcedata,targetdata, nbinitialsource,mblocklist,outputprefix)
-        # print(time.time()-temps)#, "\n" , "write completed\n")
-        
-        # temps=time.time()
-        # print("Computing splicing orthologs...")
-        # compute_multi_ortholog(cdsexon,outputprefix+"macroalignment.txt", outputprefix+"orthologygrouplist")
-        # print
-        # (time.time()-temps)#, "\n" , "orthology completed\n")
+    write_output_files(sourcedata,targetdata, nbinitialsource,mblocklist,outputprefix)
 
 if __name__ == '__main__':
     main()
