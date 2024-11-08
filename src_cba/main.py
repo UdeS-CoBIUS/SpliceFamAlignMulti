@@ -401,7 +401,7 @@ def compute_reducedsource_from_files(sourcedata,targetdata):
         geneexon[geneid].sort()
         for i in range(len(geneexon[geneid])-1):
             if(geneexon[geneid][i+1][0] <= geneexon[geneid][i][1]):
-                geneexon[geneid][i+1] = [int(minimum(geneexon[geneid][i][0],geneexon[geneid][i+1][0])),int(maximum(geneexon[geneid][i][1],geneexon[geneid][i+1][1]))]
+                geneexon[geneid][i+1] = [min(geneexon[geneid][i][0],geneexon[geneid][i+1][0]),max(geneexon[geneid][i][1],geneexon[geneid][i+1][1])]
             else:
                 geneexon_r[geneid].append(geneexon[geneid][i])
         geneexon_r[geneid].append(geneexon[geneid][-1])
@@ -488,7 +488,7 @@ def main():
             sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r = compute_reducedsource_from_files(sourcedata,targetdata)
             nbinitialsource_r = len(sourcedata_r)
             print(sourcedata_r, geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r)
-            comparisonResults = spliceAlignment(sourcedata_r, targetdata, 2, 'Yes', 'splign', 'sfa', outputprefix)
+            comparisonResults_r = spliceAlignment(sourcedata_r, targetdata, 2, 'Yes', 'splign', 'sfa', outputprefix)
             print(comparisonResults)
 
             #comparisonResults = spliceAlignment(sourceData, targetData, step, compareExon, choice, pairwiseMethod, outputPrefix)
