@@ -322,8 +322,13 @@ def align(columnlistleft,columnlistright,pairwise_score_matrix):
             columnlist = [columnlistleft[i]+columnlistright[j]] + columnlist
             i -= 1
             j -= 1
-            
-             
+    while(i != -1):
+        columnlist = [columnlistleft[i]] + columnlist
+        i -= 1
+    while(j != -1):
+        columnlist = [columnlistright[j]] + columnlist
+        j -= 1
+                
     return columnlist
     
 def score(columnlistleft,columnlistright,pairwise_score_matrix):
@@ -365,6 +370,10 @@ def addsource2mblocklist(mblocklist,gene_list,gene2cds,cdsexon,cds2geneexon):
                 if(currentcdsexonidx[cdsid] < len(cdsexon[cdsid])):
                     currentcdsexon = cdsexon[cdsid][currentcdsexonidx[cdsid]]
                     genecdsexon = cds2geneexon[cdsid][currentcdsexon[0]]
+                    while(genesegment[0] >=  genecdsexon[1] and currentcdsexonidx[cdsid] < len(cdsexon[cdsid])):
+                        currentcdsexonidx[cdsid] += 1
+                        currentcdsexon = cdsexon[cdsid][currentcdsexonidx[cdsid]]
+                        genecdsexon = cds2geneexon[cdsid][currentcdsexon[0]]
                     if(genecdsexon[0] <= genesegment[0] and genesegment[1] <= genecdsexon[1]):
                         mblock[cdsid] = [currentcdsexon[0]+genesegment[0]-genecdsexon[0],currentcdsexon[0]+genesegment[1]-genecdsexon[0]]
                         if(genesegment[1] == genecdsexon[1]):
@@ -408,7 +417,7 @@ def compute_msa(extendedsourcedata,targetdata,comparisonresults,comparisonresult
     mblocklist = column2mblocklist(columnlist,gene_list,genevertices)
 
     mblocklist = addsource2mblocklist(mblocklist,gene_list,gene2cds,cdsexon,cds2geneexon)
-
+    
     mblocklist = mergemblocks(mblocklist)
 
     return mblocklist
