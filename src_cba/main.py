@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 #-*- coding: utf-8 -*-
 
 """
@@ -41,6 +41,7 @@ sys.path.insert(0, os.path.abspath('src_python3/'))
 from compute_alignments import *
 
 from compare import *
+from utils_reduce import *
 #from compute_orthology_multi import *
 
 
@@ -377,53 +378,7 @@ def pool_write_microalignment(mblocknum,targetdata,extendedsourcedata,nbinitials
 
     return aln
 
-def compute_reducedsource_from_files(sourcedata,targetdata):
-    sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r,geneexon = [],{},{},{},{},{},{}
-    geneid2seq = {}
-    for i in range(len(targetdata)):
-        geneid,geneseq = targetdata[i]
-        geneid2seq[geneid] = geneseq
-        cdsid = geneid+"_r"
-        sourcedata_r.append([cdsid,"",geneid,[]]) 
-        geneexon_r[geneid] = []
-        geneexon[geneid] = []
-        cds2geneid_r[cdsid] = geneid
-        gene2cds_r[geneid] = [cdsid]
-        cdsexon_r[cdsid] = []
 
-    
-    for i in range(len(sourcedata)):
-        cdsid,seq,cdsgeneid,exonlist = sourcedata[i]
-        geneexon[cdsgeneid] += [exon[2:] for exon in exonlist]
-
-    for geneid in geneexon.keys():
-        cdsid = geneid+"_r"
-        geneexon[geneid].sort()
-        for i in range(len(geneexon[geneid])-1):
-            if(geneexon[geneid][i+1][0] <= geneexon[geneid][i][1]):
-                geneexon[geneid][i+1] = [min(geneexon[geneid][i][0],geneexon[geneid][i+1][0]),max(geneexon[geneid][i][1],geneexon[geneid][i+1][1])]
-            else:
-                geneexon_r[geneid].append(geneexon[geneid][i])
-        geneexon_r[geneid].append(geneexon[geneid][-1])
-        
-    for i in range(len(sourcedata_r)):
-        cdsid,seq,cdsgeneid,exonlist = sourcedata_r[i]
-        cstop = 0
-        for j in range(len(geneexon_r[cdsgeneid])):
-            gstart,gstop = geneexon_r[cdsgeneid][j]
-            seq +=  geneid2seq[cdsgeneid][gstart:gstop]
-            cstart = cstop
-            cstop = cstart +(gstop-gstart)
-            exonlist.append([cstart,cstop,gstart,gstop])
-            cdsexon_r[cdsid].append([cstart,cstop])
-        sourcedata_r[i][1] = seq
-        sourcedata_r[i][3] = exonlist
-    
-    return sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r
-
-#def computeResultFiles(sourcedata,targetdata,outputPrefix):
-    
-    
 #####################
 ### Main ############
 
@@ -482,23 +437,26 @@ def main():
             if(treefile == None):
                 tree = compute_tree(sourcedata,targetdata,comparisonresults,comparisonresults_idty,nbinitialsource)
 
+            
             mblocklist = compute_msa(sourcedata,targetdata,comparisonresults,comparisonresults_idty,geneexon,cdsexon,nbinitialsource,cds2geneid,cds2geneexon,gene2cds,args.pairwiseScore,tree,outputprefix)
             
         elif(computepairwise == "yes" and args.source2TargetFile != None and args.sourceExonFile != None):
             sourcedata_r,geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r = compute_reducedsource_from_files(sourcedata,targetdata)
             nbinitialsource_r = len(sourcedata_r)
-            print(sourcedata_r, geneexon_r,cdsexon_r,cds2geneid_r,cds2geneexon_r,gene2cds_r)
-            comparisonResults_r = spliceAlignment(sourcedata_r, targetdata, 2, 'Yes', 'splign', 'sfa', outputprefix)
-            print(comparisonResults)
+            
+            comparisonresults_r = spliceAlignment(sourcedata_r, targetdata, 2, 'Yes', 'splign', 'sfa', outputprefix)
+            
+            comparisonresults_r, comparisonresults_idty_r = comparisonresults2comparisonresults_idty(comparisonresults_r,sourcedata_r,targetdata,nbinitialsource_r)
+            if(treefile == None):
+                tree = compute_tree(sourcedata_r,targetdata,comparisonresults_r,comparisonresults_idty_r,nbinitialsource_r)
+            
+            mblocklist_r = compute_msa(sourcedata_r,targetdata,comparisonresults_r,comparisonresults_idty_r,geneexon_r,cdsexon_r,nbinitialsource_r,cds2geneid_r,cds2geneexon_r,gene2cds_r,args.pairwiseScore,tree,outputprefix)
 
-            #comparisonResults = spliceAlignment(sourceData, targetData, step, compareExon, choice, pairwiseMethod, outputPrefix)
-            #comparisonresults_,comparisonresults_idty_r = computeResultFiles(sourcedata_r,targetdata,outputPrefix)
-            #if(treefile == None):
-            #    tree = compute_tree(sourcedata_r,targetdata,comparisonresults_,comparisonresults_idty_r,nbinitialsource_r)
+            print(mblocklist_r)
 
-            mblocklist = compute_msa(sourcedata_r,targetdata,comparisonresults_r,comparisonresults_idty_r,geneexon_r,cdsexon_r,nbinitialsource_r,cds2geneid_r,cds2geneexon_r,gene2cds_r,args.pairwiseScore,tree,outputprefix)
-
-        
+            #mblocklist = addsource2mblocklist(mblocklist,gene_list,gene2cds,cdsexon,cds2geneexon)
+    
+            #mblocklist = mergemblocks(mblocklist)
         
     write_output_files(sourcedata,targetdata, nbinitialsource,mblocklist,outputprefix)
 
